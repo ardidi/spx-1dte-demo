@@ -178,6 +178,24 @@ details.more>summary:hover{text-decoration:underline}
 .scrollcue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:2;font-size:13px;color:var(--muted);text-align:center;animation:bob 1.8s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
 @media(max-width:560px){.stage{margin-top:-22px;min-height:88vh}.stage-in{padding:0 16px}.stage-scrim{background:linear-gradient(180deg,rgba(245,248,253,.9) 34%,rgba(245,248,253,.5) 100%)}.stage-num{font-size:clamp(42px,13vw,64px)}}
+html{scroll-snap-type:y proximity}
+.stage{scroll-snap-align:start}
+.slide{scroll-snap-align:start;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.slide-in{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.slide.on .slide-in{opacity:1;transform:none}
+.stage-numrow{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.stage-yr{font-size:clamp(20px,3.4vw,38px);font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.stage-badge{display:inline-block;padding:5px 14px;border-radius:999px;background:linear-gradient(180deg,#2ee6a6,#12b783);color:#04120c;font-weight:800;font-size:clamp(14px,1.9vw,19px);opacity:0;transform:scale(.5);transition:opacity .45s ease,transform .45s cubic-bezier(.2,1.6,.4,1)}
+.stage-badge.show{opacity:1;transform:scale(1)}
+@keyframes numland{0%{transform:scale(1)}35%{transform:scale(1.07)}100%{transform:scale(1)}}
+.stage-num.land{animation:numland .5s ease}
+.stage-cap{position:absolute;z-index:2;padding:6px 12px;border-radius:10px;background:rgba(255,255,255,.92);border:1px solid var(--line);box-shadow:0 4px 18px rgba(30,50,80,.12);font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;opacity:0;transform:translate(-50%,calc(-100% + 10px));transition:opacity .5s ease,transform .5s ease;pointer-events:none}
+.stage-cap.show{opacity:1;transform:translate(-50%,-100%)}
+.stage-end{position:absolute;z-index:2;font-size:12.5px;font-weight:700;white-space:nowrap;transform:translate(-100%,-50%);opacity:0;transition:opacity .6s ease;pointer-events:none}
+.stage-end.show{opacity:1}
+#slide-num .beatcell .amt{font-size:clamp(26px,4.6vw,40px)}
+#slide-num .stats .v{font-size:clamp(26px,4vw,38px)}
+@media(max-width:560px){.stage-cap,.stage-end{display:none}}
 </style>
 </head>
 <body>
@@ -186,7 +204,7 @@ details.more>summary:hover{text-decoration:underline}
   <div class="stage-scrim"></div>
   <div class="stage-in">
     <div class="stage-eyebrow">本金 $<span id="st-from"></span> · 每天在標普 500 收一次租金 · 8 年後</div>
-    <div class="stage-num"><span id="st-num">100,000</span></div>
+    <div class="stage-numrow"><div class="stage-num"><span id="st-num">100,000</span></div><div class="stage-yr" id="st-year">2018</div><div class="stage-badge" id="st-badge">+998%</div></div>
     <div class="stage-reveal" id="st-rest">
       <div class="stage-title">每天收租,<span class="accent">八年十倍</span></div>
       <div class="stage-sub">賣一份隔日到期的「保險」收權利金,大盤沒急跌就整筆落袋——8 年把 $<span id="st-from2"></span> 滾成 $<span id="st-to"></span>。</div>
@@ -201,24 +219,15 @@ details.more>summary:hover{text-decoration:underline}
       </div>
     </div>
   </div>
-  <div class="scrollcue stage-reveal" id="st-cue">↓ 往下看它怎麼做到</div>
+  <div class="stage-cap" id="cap-a">2020 疫情崩盤 → 照樣收租</div>
+  <div class="stage-cap" id="cap-b">2022 升息熊市 → 撐過去</div>
+  <div class="stage-end" id="end-strat" style="color:#b57e12"></div>
+  <div class="stage-end" id="end-qqq" style="color:#2f7fd6"></div>
+  <div class="stage-end" id="end-spy" style="color:#5a6b86"></div>
+  <div class="scrollcue stage-reveal" id="st-cue">↓ 往下看它贏大盤多少</div>
 </section>
 <div class="wrap">
-  <div class="dlbar">
-    <div class="dltxt"><b>免安裝・一鍵執行</b><span class="dlsub">Windows:解壓縮後雙擊 <code>run.bat</code> 就能跑,已內建 Node、不用安裝任何東西。</span></div>
-    <a class="dlbtn" href="spx-1dte-naked-put-windows.zip" download><span class="ar">⬇</span> 下載程式(Windows・約 36 MB)</a>
-  </div>
-  <h1>把 S&amp;P 500 波動<br><span class="accent">變成每日現金流</span></h1>
-  <p class="sub">每天在美股大盤(標普 500)上賣一份「隔天到期」的保險,收一筆權利金。只要大盤隔天沒有急跌一大段,保險就作廢、權利金整筆進口袋。日積月累,就成了下面這條曲線。</p>
-
-  <div class="hero">
-    <div><div style="font-size:13px;color:var(--muted);letter-spacing:.08em;margin-bottom:4px">起始資金</div><div class="from">$<span id="h-from"></span></div></div>
-    <div class="arrow">→</div>
-    <div><div style="font-size:13px;color:var(--green);letter-spacing:.08em;margin-bottom:4px">8 年後(策略獲利 + SGOV 利息)</div><div class="big">$<span id="h-to"></span></div></div>
-    <div class="tag" id="h-ret"></div>
-  </div>
-  <p class="sub" style="margin:-14px 0 26px;font-size:14px">這金額還多算了一層利息:賣保險要押一筆保證金,但那筆錢只是「抵押」、沒真的花掉,所以整份本金能同時停在短期美債(SGOV)上生息。只看選擇權本身是 $<span id="h-base"></span>(<span id="h-baseret"></span>%)。</p>
-
+  <section class="slide" id="slide-num"><div class="slide-in">
   <div class="beatbar">
     <h2>同樣一筆 $<span id="beat-start"></span>,8 年後本策略滾到 <span class="up">$<span id="beat-strat"></span></span>——<br>是買進持有 <b style="color:#2f7fd6">QQQ</b> 的 <span class="up"><span id="beat-qqq-x"></span> 倍</span>、<b style="color:#6b7a92">SPY</b> 的 <span class="up"><span id="beat-spy-x"></span> 倍</span></h2>
     <div class="beatrow">
@@ -227,7 +236,15 @@ details.more>summary:hover{text-decoration:underline}
       <div class="beatcell"><div class="lbl"><i style="background:#6b7a92"></i>買進持有 SPY(標普500)</div><div class="amt">$<span id="beat-spy"></span></div><div class="mul">+<span id="beat-spy-ret"></span>% · 本策略多賺 <b style="color:var(--green)">$<span id="beat-spy-diff"></span></b></div></div>
     </div>
   </div>
+  <div class="stats" style="margin-top:14px">
+    <div class="stat"><div class="k">年化報酬 (CAGR)</div><div class="v g" id="s-cagr"></div></div>
+    <div class="stat"><div class="k">獲利交易佔比</div><div class="v gold" id="s-win"></div></div>
+    <div class="stat"><div class="k">最大回撤</div><div class="v" id="s-dd"></div></div>
+    <div class="stat"><div class="k">交易次數</div><div class="v" id="s-trades"></div></div>
+  </div>
+  </div></section>
 
+  <section class="slide" id="slide-cmp"><div class="slide-in">
   <div class="chartcard">
     <div class="section-t">本策略 vs 買進持有大盤 · 同樣 $<span id="cmp-start"></span> 起始資金 · 策略部位 起始 <span id="lot0" style="color:var(--gold)"></span> 口 → 期末 <span id="lotN" style="color:var(--gold)"></span> 口</div>
     <canvas id="sizecurve" height="300"></canvas>
@@ -241,6 +258,22 @@ details.more>summary:hover{text-decoration:underline}
     <div class="tradehint" style="margin-top:2px">四條線都從同樣的 $<span id="cmp-start2"></span> 出發。灰線、藍線是把錢一次買進 <b>SPY</b> / <b>QQQ</b> 抱到今天;綠線、金線是本策略,金線多算了閒置保證金停 <b>SGOV(短期美債)</b>收的利息(利率用歷史真實值、會隨當年利率浮動)。策略遠贏大盤、多賺數倍;代價是用了槓桿——<b>最大回撤和大盤差不多(策略 <span id="cmp-dd-s"></span>% vs SPY <span id="cmp-dd-spy"></span>% / QQQ <span id="cmp-dd-qqq"></span>%),報酬拉高、風險也同步放大,這點務必看清楚。</b></div>
     </details>
   </div>
+  </div></section>
+
+  <div class="dlbar">
+    <div class="dltxt"><b>免安裝・一鍵執行</b><span class="dlsub">Windows:解壓縮後雙擊 <code>run.bat</code> 就能跑,已內建 Node、不用安裝任何東西。</span></div>
+    <a class="dlbtn" href="spx-1dte-naked-put-windows.zip" download><span class="ar">⬇</span> 下載程式(Windows・約 36 MB)</a>
+  </div>
+  <h1>它是怎麼<span class="accent">做到的</span>?</h1>
+  <p class="sub">每天在美股大盤(標普 500)上賣一份「隔天到期」的保險,收一筆權利金。只要大盤隔天沒有急跌一大段,保險就作廢、權利金整筆進口袋。日積月累,就成了上面那條曲線。</p>
+
+  <div class="hero">
+    <div><div style="font-size:13px;color:var(--muted);letter-spacing:.08em;margin-bottom:4px">起始資金</div><div class="from">$<span id="h-from"></span></div></div>
+    <div class="arrow">→</div>
+    <div><div style="font-size:13px;color:var(--green);letter-spacing:.08em;margin-bottom:4px">8 年後(策略獲利 + SGOV 利息)</div><div class="big">$<span id="h-to"></span></div></div>
+    <div class="tag" id="h-ret"></div>
+  </div>
+  <p class="sub" style="margin:-14px 0 26px;font-size:14px">這金額還多算了一層利息:賣保險要押一筆保證金,但那筆錢只是「抵押」、沒真的花掉,所以整份本金能同時停在短期美債(SGOV)上生息。只看選擇權本身是 $<span id="h-base"></span>(<span id="h-baseret"></span>%)。</p>
 
   <div class="chartcard">
     <div class="section-t">權益成長曲線 · $<span id="curve-start"></span> 起始 · 逐日複利</div>
@@ -249,13 +282,6 @@ details.more>summary:hover{text-decoration:underline}
       <span><i style="background:#d99a1e"></i>策略 + SGOV 收息 · 期末 $<span id="curve-cash"></span></span>
       <span><i style="background:#12a06f"></i>純選擇權策略 · 期末 $<span id="curve-base"></span></span>
     </div>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><div class="k">年化報酬 (CAGR)</div><div class="v g" id="s-cagr"></div></div>
-    <div class="stat"><div class="k">獲利交易佔比</div><div class="v gold" id="s-win"></div></div>
-    <div class="stat"><div class="k">最大回撤</div><div class="v" id="s-dd"></div></div>
-    <div class="stat"><div class="k">交易次數</div><div class="v" id="s-trades"></div></div>
   </div>
 
   <div class="grid2">
@@ -352,6 +378,7 @@ const money = n => (n<0?'-$':'+$') + nf(Math.abs(n));
 const dpr = () => window.devicePixelRatio || 1;
 
 $('st-from').textContent=nf(D.startEquity); $('st-from2').textContent=nf(D.startEquity); $('st-to').textContent=nf(D.cashEnd); $('st-num').textContent=nf(D.startEquity);
+$('st-year').textContent=D.curve[0].date.slice(0,4); $('st-badge').textContent='+'+D.cashReturnPct+'%';
 $('h-from').textContent=nf(D.startEquity); $('h-to').textContent=nf(D.cashEnd);
 $('h-ret').textContent='+'+D.cashReturnPct+'%'; $('s-cagr').textContent=D.cagr+'%'; $('s-win').textContent=D.winRate+'%';
 $('h-base').textContent=nf(D.endEquity); $('h-baseret').textContent='+'+D.totalReturnPct;
@@ -373,14 +400,20 @@ $('beat-strat').textContent=nf(D.cashEnd); $('beat-strat2').textContent=nf(D.cas
 $('beat-qqq').textContent=nf(D.qqqEnd); $('beat-qqq-ret').textContent=D.qqqReturnPct; $('beat-qqq-x').textContent=(D.cashEnd/D.qqqEnd).toFixed(1); $('beat-qqq-diff').textContent=nf(D.cashEnd-D.qqqEnd);
 $('beat-spy').textContent=nf(D.spyEnd); $('beat-spy-ret').textContent=D.spyReturnPct; $('beat-spy-x').textContent=(D.cashEnd/D.spyEnd).toFixed(1); $('beat-spy-diff').textContent=nf(D.cashEnd-D.spyEnd);
 
-// 第一屏:滿版動畫(三線描繪 + 數字跟著飆 + 標題淡入)
+// 第一屏:滿版動畫(三線描繪 + 數字/年份跟著飆 + 災難字幕 + 終點標籤 + 標題淡入)
 (function(){const cv=$('herochart');if(!cv)return;const pts=D.curve;if(!pts||pts.length<2)return;
   const cashv=pts.map(p=>p.cash),spyv=pts.map(p=>p.spy),qqqv=pts.map(p=>p.qqq),eqv=pts.map(p=>p.equity);
   const lo=Math.min(...eqv,...spyv,...qqqv,...cashv),hi=Math.max(...cashv,...qqqv,...spyv);
   let Wd=0,Hd=0;const ctx=cv.getContext('2d');
   function rs(){const r=cv.parentElement.getBoundingClientRect();Wd=r.width;Hd=r.height;cv.width=Wd*dpr();cv.height=Hd*dpr();ctx.setTransform(dpr(),0,0,dpr(),0,0);}
-  const pT=()=>Hd*0.16,pB=()=>Hd*0.13,pL=0,pR=()=>Wd*0.04;
+  const pT=()=>Hd*0.16,pB=()=>Hd*0.13,pL=0,pR=()=>Wd*0.05;
   const X=i=>pL+(Wd-pL-pR())*(i/(pts.length-1)),Y=v=>pT()+(Hd-pT()-pB())*(1-(v-lo)/((hi-lo)||1));
+  const caps=[{el:$('cap-a'),idx:pts.findIndex(p=>p.date>='2020-03-20')},{el:$('cap-b'),idx:pts.findIndex(p=>p.date>='2022-09-15')}].filter(c=>c.el&&c.idx>0);
+  const short=v=>v>=1e6?'$'+(v/1e6).toFixed(2)+'M':'$'+Math.round(v/1000)+'K';
+  const ends=[[$('end-strat'),cashv,'本策略 '],[$('end-qqq'),qqqv,'QQQ '],[$('end-spy'),spyv,'SPY ']].filter(e=>e[0]);
+  function place(){const last=pts.length-1;
+    caps.forEach(c=>{c.el.style.left=X(c.idx)+'px';c.el.style.top=(Y(cashv[c.idx])-14)+'px';});
+    ends.forEach(e=>{const v=e[1][last];e[0].textContent=e[2]+short(v);e[0].style.left=(X(last)-16)+'px';e[0].style.top=Y(v)+'px';});}
   function line(arr,cut,col,w,dash,glow){ctx.beginPath();for(let i=0;i<=cut&&i<arr.length;i++){const xx=X(i),yy=Y(arr[i]);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.strokeStyle=col;ctx.lineWidth=w;ctx.lineJoin='round';ctx.lineCap='round';if(dash)ctx.setLineDash(dash);if(glow){ctx.shadowColor=glow;ctx.shadowBlur=18;}ctx.stroke();ctx.setLineDash([]);ctx.shadowBlur=0;}
   function draw(prog){ctx.clearRect(0,0,Wd,Hd);
     ctx.strokeStyle='rgba(150,165,190,.22)';ctx.lineWidth=1;ctx.font='12px system-ui';ctx.fillStyle='#8595ad';ctx.textAlign='center';
@@ -391,26 +424,37 @@ $('beat-spy').textContent=nf(D.spyEnd); $('beat-spy-ret').textContent=D.spyRetur
     line(spyv,cut,'#5a6b86',2,[5,5],null);
     line(qqqv,cut,'#2f7fd6',2.2,null,null);
     line(cashv,cut,'#d99a1e',3.4,null,'rgba(200,144,26,.5)');
+    caps.forEach(c=>{if(cut>=c.idx)c.el.classList.add('show');});
     if(cut>0){const i=Math.min(cut,pts.length-1);ctx.beginPath();ctx.arc(X(i),Y(cashv[i]),6,0,7);ctx.fillStyle='#d99a1e';ctx.fill();ctx.beginPath();ctx.arc(X(i),Y(cashv[i]),12,0,7);ctx.strokeStyle='rgba(200,144,26,.35)';ctx.lineWidth=2;ctx.stroke();
-      $('st-num').textContent=nf(cashv[i]);}}
-  rs();draw(0);
-  let t0=null;const DUR=2600;
-  function anim(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/DUR);draw(1-Math.pow(1-p,3));if(p<1){requestAnimationFrame(anim);}else{$('st-num').textContent=nf(D.cashEnd);setTimeout(()=>{$('st-rest').classList.add('show');$('st-cue').classList.add('show');},180);}}
+      $('st-num').textContent=nf(cashv[i]);$('st-year').textContent=pts[i].date.slice(0,4);}}
+  rs();place();draw(0);
+  function fin(){$('st-num').textContent=nf(D.cashEnd);$('st-year').textContent=pts[pts.length-1].date.slice(0,4);
+    $('st-num').parentElement.classList.add('land');
+    setTimeout(()=>{$('st-badge').classList.add('show');ends.forEach(e=>e[0].classList.add('show'));},260);
+    setTimeout(()=>{$('st-rest').classList.add('show');$('st-cue').classList.add('show');},700);}
+  let t0=null;const DUR=4200;
+  function anim(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/DUR);draw(1-Math.pow(1-p,2));if(p<1){requestAnimationFrame(anim);}else{fin();}}
   requestAnimationFrame(anim);
-  addEventListener('resize',()=>{rs();draw(1);$('st-num').textContent=nf(D.cashEnd);$('st-rest').classList.add('show');$('st-cue').classList.add('show');});})();
+  addEventListener('resize',()=>{rs();place();draw(1);fin();caps.forEach(c=>c.el.classList.add('show'));});})();
 
 // Apple 式數字:捲進畫面時從 0 跳升到終值
 (function(){if(!('IntersectionObserver'in window))return;
   const ease=t=>1-Math.pow(1-t,3);
-  function run(el,to,dec,comma){let t0=null;const DUR=1100;
+  function run(el,to,dec,comma,suf){let t0=null;const DUR=1100;suf=suf||'';
     function step(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/DUR),v=to*ease(p);
-      el.textContent=comma?Math.round(v).toLocaleString('en-US'):v.toFixed(dec);
-      if(p<1)requestAnimationFrame(step);else el.textContent=comma?Math.round(to).toLocaleString('en-US'):to.toFixed(dec);}
+      el.textContent=(comma?Math.round(v).toLocaleString('en-US'):v.toFixed(dec))+suf;
+      if(p<1)requestAnimationFrame(step);else el.textContent=(comma?Math.round(to).toLocaleString('en-US'):to.toFixed(dec))+suf;}
     requestAnimationFrame(step);}
-  const specs=[['s-cagr',D.cagr,1,false],['s-win',D.winRate,1,false],['beat-qqq-x',D.cashEnd/D.qqqEnd,1,false],['beat-spy-x',D.cashEnd/D.spyEnd,1,false],['beat-strat',D.cashEnd,0,true],['beat-strat2',D.cashEnd,0,true]];
+  const specs=[['s-cagr',D.cagr,1,false,'%'],['s-win',D.winRate,1,false,'%'],['beat-qqq-x',D.cashEnd/D.qqqEnd,1,false,''],['beat-spy-x',D.cashEnd/D.spyEnd,1,false,''],['beat-strat',D.cashEnd,0,true,''],['beat-strat2',D.cashEnd,0,true,'']];
   const map=new Map(specs.map(s=>[s[0],s]));
-  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const s=map.get(e.target.id);if(s)run(e.target,s[1],s[2],s[3]);io.unobserve(e.target);}});},{threshold:.6});
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const s=map.get(e.target.id);if(s)run(e.target,s[1],s[2],s[3],s[4]);io.unobserve(e.target);}});},{threshold:.6});
   specs.forEach(s=>{const el=$(s[0]);if(el)io.observe(el);});})();
+
+// 分頁:捲到才淡入
+(function(){const els=document.querySelectorAll('.slide');
+  if(!('IntersectionObserver'in window)){els.forEach(el=>el.classList.add('on'));return;}
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});},{threshold:.3});
+  els.forEach(el=>io.observe(el));})();
 
 // 逐年
 (function(){const mx=Math.max(...D.byYear.map(y=>Math.abs(y.pnl)));
@@ -467,8 +511,11 @@ $('beat-spy').textContent=nf(D.spyEnd); $('beat-spy-ret').textContent=D.spyRetur
     line(ctx,X,Y,cashv,cut,'#d99a1e',2.6,null,'rgba(245,196,81,.55)'); // 策略+SGOV 金發光
     if(cut>0){const i=Math.min(cut,pts.length-1);ctx.fillStyle='#d99a1e';ctx.beginPath();ctx.arc(X(i),Y(cashv[i]),4.5,0,7);ctx.fill();
       ctx.fillStyle='#d99a1e';ctx.textAlign='right';ctx.font='bold 12px system-ui';ctx.fillText(pts[i].lots+' 口',X(i)-8,Y(comp[i])+16);}}
-  let t0=null;function a(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/1400);draw(1-Math.pow(1-p,3));if(p<1)requestAnimationFrame(a);}requestAnimationFrame(a);
-  addEventListener('resize',()=>draw(1));})();
+  let started=false;
+  function start(){if(started)return;started=true;let t0=null;function a(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/1600);draw(1-Math.pow(1-p,3));if(p<1)requestAnimationFrame(a);}requestAnimationFrame(a);}
+  draw(0);
+  if('IntersectionObserver'in window){const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){start();io.disconnect();}});},{threshold:.35});io.observe(cv);}else start();
+  addEventListener('resize',()=>draw(started?1:0));})();
 
 const T=D.tradeList;
 
