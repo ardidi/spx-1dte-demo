@@ -5,22 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SPX 每日選擇權收租策略 · 8 年 1696 筆實測</title>
 <style>
-:root{--bg:#070b14;--card:#0e1626;--card2:#111d33;--ink:#e8eef7;--muted:#8ba0be;--gold:#f5c451;--green:#22d39a;--red:#ff5d6c;--blue:#6fb4ff;--line:#1d2b45;--glow:rgba(34,211,154,.35)}
+:root{--bg:#f5f8fd;--card:#ffffff;--card2:#eef3fb;--ink:#132135;--muted:#5f708c;--gold:#c8901a;--green:#12a06f;--red:#e0475a;--blue:#2f7fd6;--line:#e2e9f3;--glow:rgba(18,160,111,.22)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:radial-gradient(1200px 700px at 70% -10%,#12203a 0%,#070b14 55%),var(--bg);color:var(--ink);font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:48px 20px 80px;line-height:1.5}
+body{background:radial-gradient(1200px 700px at 70% -10%,#e6f0fb 0%,#f5f8fd 55%),var(--bg);color:var(--ink);font-family:"Segoe UI","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:48px 20px 80px;line-height:1.5}
 .wrap{max-width:1080px;margin:0 auto}
 .badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.14em;color:var(--gold);border:1px solid rgba(245,196,81,.35);border-radius:999px;padding:6px 16px;text-transform:uppercase;background:rgba(245,196,81,.06)}
 .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
 h1{font-size:clamp(30px,5vw,52px);font-weight:800;letter-spacing:-.02em;margin:22px 0 8px;line-height:1.1}
-h1 .accent{background:linear-gradient(90deg,#f5c451,#ffe6a3);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1 .accent{background:linear-gradient(90deg,#d99a1e,#b57a0f);-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:var(--muted);font-size:16px;max-width:640px}
 .hero{display:flex;flex-wrap:wrap;align-items:flex-end;gap:28px;margin:38px 0 30px}
-.hero .big{font-size:clamp(44px,8vw,84px);font-weight:800;letter-spacing:-.03em;background:linear-gradient(120deg,#22d39a,#7ef7cf 60%,#22d39a);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 40px var(--glow)}
+.hero .big{font-size:clamp(44px,8vw,84px);font-weight:800;letter-spacing:-.03em;background:linear-gradient(120deg,#0f9264,#16b57e 60%,#0f9264);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero .arrow{font-size:34px;color:var(--muted);align-self:center}
 .hero .from{font-size:clamp(22px,4vw,34px);color:var(--muted);font-weight:600}
 .hero .tag{font-size:14px;color:var(--green);border:1px solid rgba(34,211,154,.4);border-radius:8px;padding:5px 12px;background:rgba(34,211,154,.08);align-self:center}
 .section-t{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.06em;margin-bottom:6px}
-.chartcard,.yearcard,.how,.ledgercard,.detailcard{background:linear-gradient(180deg,var(--card),#0a1220);border:1px solid var(--line);border-radius:20px;box-shadow:0 30px 80px -40px rgba(0,0,0,.9)}
+.chartcard,.yearcard,.how,.ledgercard,.detailcard{background:linear-gradient(180deg,var(--card),#f3f7fc);border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 60px -38px rgba(31,60,110,.35)}
 .chartcard{padding:24px 22px 12px;position:relative;overflow:hidden;margin-top:22px}
 canvas{display:block;width:100%}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:26px 0}
@@ -35,13 +35,13 @@ canvas{display:block;width:100%}
 .yearcard h3,.how h3,.ledgercard h3{font-size:15px;margin-bottom:14px}
 .ybar{display:flex;align-items:center;gap:12px;margin:9px 0;font-size:14px}
 .ybar .yl{width:44px;color:var(--muted);font-variant-numeric:tabular-nums}
-.ybar .track{flex:1;height:22px;background:#0a1424;border-radius:6px;overflow:hidden}
-.ybar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#128a63,#22d39a);box-shadow:0 0 16px var(--glow)}
+.ybar .track{flex:1;height:22px;background:#e9eef6;border-radius:6px;overflow:hidden}
+.ybar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#128a63,#12a06f);box-shadow:0 0 16px var(--glow)}
 .ybar .fill.neg{background:linear-gradient(90deg,#8a1f2a,#ff5d6c)}
 .ybar .yv{width:78px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
 .ybar .yv.pos{color:var(--green)}.ybar .yv.neg{color:var(--red)}
 .how ul{list-style:none;display:grid;gap:12px}
-.how li{display:flex;gap:12px;color:#cdd9ea;font-size:15px}
+.how li{display:flex;gap:12px;color:#3a4a63;font-size:15px}
 .how li .n{flex:none;width:26px;height:26px;border-radius:8px;background:rgba(245,196,81,.12);color:var(--gold);display:grid;place-items:center;font-weight:700;font-size:13px;border:1px solid rgba(245,196,81,.3)}
 .spec{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:20px}
 @media(max-width:640px){.spec{grid-template-columns:1fr}}
@@ -49,7 +49,7 @@ canvas{display:block;width:100%}
 .specrow span{font-size:12px;color:var(--muted);letter-spacing:.03em}
 .specrow b{font-size:14px;color:var(--ink);font-weight:600}
 ol.steps{list-style:none;counter-reset:s;display:grid;gap:14px}
-ol.steps li{counter-increment:s;position:relative;padding-left:44px;color:#cdd9ea;font-size:14.5px;line-height:1.6}
+ol.steps li{counter-increment:s;position:relative;padding-left:44px;color:#3a4a63;font-size:14.5px;line-height:1.6}
 ol.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,rgba(245,196,81,.9),rgba(245,196,81,.5));color:#1a1206;display:grid;place-items:center;font-weight:800;font-size:14px}
 ol.steps li b{color:var(--gold);font-weight:700}
 .sizelegend{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:10px;font-size:13px;color:var(--muted)}
@@ -59,15 +59,15 @@ ol.steps li b{color:var(--gold);font-weight:700}
 table.heat{width:100%;border-collapse:separate;border-spacing:3px;font-size:11.5px;font-variant-numeric:tabular-nums}
 table.heat th{color:var(--muted);font-weight:600;padding:2px;font-size:11px}
 table.heat td.hy{color:var(--muted);font-weight:700;text-align:left;padding-right:6px}
-table.heat td.hc{text-align:center;padding:7px 2px;border-radius:5px;color:#eaf2ff;min-width:34px}
-table.heat td.hc.empty{background:#0a1220!important;color:#2a3852}
+table.heat td.hc{text-align:center;padding:7px 2px;border-radius:5px;color:#fff;min-width:34px}
+table.heat td.hc.empty{background:#eef3fb!important;color:#b3bece}
 .tradehint{color:var(--muted);font-size:13px;margin:2px 0 14px}
 .ledgerwrap{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:14px}
-.ledgerwrap::-webkit-scrollbar{width:9px}.ledgerwrap::-webkit-scrollbar-thumb{background:#22344f;border-radius:6px}
+.ledgerwrap::-webkit-scrollbar{width:9px}.ledgerwrap::-webkit-scrollbar-thumb{background:#c4d0e0;border-radius:6px}
 table.led{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
-table.led th{position:sticky;top:0;background:#0c1524;color:var(--muted);font-weight:600;text-align:right;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:1}
+table.led th{position:sticky;top:0;background:#eef3fb;color:var(--muted);font-weight:600;text-align:right;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:1}
 table.led th:first-child,table.led td:first-child{text-align:left}
-table.led td{padding:9px 12px;border-bottom:1px solid rgba(29,43,69,.5);text-align:right;white-space:nowrap}
+table.led td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 table.led tr{cursor:pointer;transition:background .12s}
 table.led tbody tr:hover{background:rgba(34,211,154,.06)}
 table.led tr.sel{background:rgba(245,196,81,.10)}
@@ -83,19 +83,19 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
 .replaybar{display:flex;align-items:center;gap:14px;margin:6px 0 12px}
 .pbtn{width:40px;height:40px;flex:none;border-radius:50%;border:1px solid rgba(34,211,154,.5);background:rgba(34,211,154,.1);color:var(--green);font-size:16px;cursor:pointer;display:grid;place-items:center;transition:.15s}
 .pbtn:hover{background:rgba(34,211,154,.2)}
-.scrub{flex:1;-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#16233b;outline:none}
+.scrub{flex:1;-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:#dbe3ee;outline:none}
 .scrub::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 8px rgba(245,196,81,.6)}
 .scrub::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold);border:none;cursor:pointer}
 .clock{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px;min-width:118px;text-align:right}
 .clock b{color:var(--ink)}
 .tpread{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin:0 0 14px;font-size:13px;color:var(--muted)}
 .tpread b{font-variant-numeric:tabular-nums;font-weight:700}
-.tpbar{flex:1 1 100%;height:8px;border-radius:6px;background:#16233b;overflow:hidden;min-width:180px;position:relative}
-.tpbar>i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#22d39a,var(--gold));transition:width .12s linear}
+.tpbar{flex:1 1 100%;height:8px;border-radius:6px;background:#dbe3ee;overflow:hidden;min-width:180px;position:relative}
+.tpbar>i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#12a06f,var(--gold));transition:width .12s linear}
 @media(max-width:820px){.dualchart{grid-template-columns:1fr}}
 .subt{font-size:12px;color:var(--muted);margin-bottom:2px}
-.foot{margin-top:34px;color:#5f708c;font-size:12.5px;line-height:1.7;border-top:1px solid var(--line);padding-top:20px}
-.foot b{color:#8ba0be}
+.foot{margin-top:34px;color:#7f8ca3;font-size:12.5px;line-height:1.7;border-top:1px solid var(--line);padding-top:20px}
+.foot b{color:#4a5a74}
 #heat{overflow-x:auto;-webkit-overflow-scrolling:touch}
 @media(max-width:560px){
   body{padding:22px 12px 60px;line-height:1.55}
@@ -124,27 +124,34 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
   table.led th,table.led td{padding:8px 9px}
   .foot{font-size:12px}
 }
-.dlbar{margin:0 0 26px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(34,211,154,.08),rgba(14,22,38,.6));display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
+.dlbar{margin:0 0 26px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(18,160,111,.10),rgba(255,255,255,.9));display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
 .dlbar .dltxt b{color:var(--ink);font-size:15px}
 .dlsub{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
-.dlsub code{background:#0b1220;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--gold)}
+.dlsub code{background:#eef3fb;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--gold)}
 .dlbtn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:12px;background:linear-gradient(180deg,#2ee6a6,#12b783);color:#04120c;font-weight:800;font-size:16px;text-decoration:none;box-shadow:0 6px 24px var(--glow);white-space:nowrap;transition:transform .12s ease}
 .dlbtn:hover{transform:translateY(-2px)}
 .dlbtn .ar{font-size:19px}
 @media(max-width:560px){.dlbar{flex-direction:column;align-items:stretch;text-align:center}.dlbtn{justify-content:center}}
-.beatbar{margin:6px 0 18px;padding:22px 24px;border:1px solid rgba(34,211,154,.35);border-radius:18px;background:linear-gradient(135deg,rgba(34,211,154,.12),rgba(111,180,255,.06) 55%,rgba(14,22,38,.5));position:relative;overflow:hidden}
+.beatbar{margin:6px 0 18px;padding:22px 24px;border:1px solid rgba(18,160,111,.30);border-radius:18px;background:linear-gradient(135deg,rgba(18,160,111,.14),rgba(47,127,214,.08) 55%,rgba(255,255,255,.9));position:relative;overflow:hidden}
 .beatbar h2{margin:0 0 16px;font-size:clamp(19px,3.3vw,27px);font-weight:800;line-height:1.4;color:var(--ink)}
 .beatbar h2 .up{color:var(--green);text-shadow:0 0 24px var(--glow);white-space:nowrap}
 .beatrow{display:flex;flex-wrap:wrap;gap:12px}
-.beatcell{flex:1 1 160px;padding:14px 16px;border-radius:14px;background:rgba(9,14,24,.55);border:1px solid var(--line)}
+.beatcell{flex:1 1 160px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.75);border:1px solid var(--line)}
 .beatcell .lbl{font-size:12px;color:var(--muted);letter-spacing:.05em;margin-bottom:7px;display:flex;align-items:center;gap:7px}
 .beatcell .lbl i{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
 .beatcell .amt{font-size:clamp(23px,3.8vw,31px);font-weight:800;letter-spacing:-.02em}
 .beatcell .mul{font-size:12.5px;margin-top:6px;color:var(--muted)}
-.beatcell.win{border-color:rgba(245,196,81,.55);background:linear-gradient(180deg,rgba(245,196,81,.14),rgba(9,14,24,.5))}
+.beatcell.win{border-color:rgba(200,144,26,.5);background:linear-gradient(180deg,rgba(200,144,26,.16),rgba(255,255,255,.85))}
 .beatcell.win .amt{color:var(--gold)}
 .beatcell.win .mul b{color:var(--green)}
 @media(max-width:560px){.beatbar{padding:18px 16px}.beatcell{flex:1 1 100%}}
+.refcta{margin:30px 0;padding:26px 28px;border:1px solid rgba(47,127,214,.32);border-radius:18px;background:linear-gradient(135deg,rgba(47,127,214,.10),rgba(18,160,111,.06) 60%,rgba(255,255,255,.9));display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px}
+.refcta .rtxt{flex:1 1 300px}
+.refcta .rtxt b{display:block;font-size:19px;color:var(--ink);margin-bottom:6px}
+.refcta .rtxt span{font-size:14px;color:var(--muted);line-height:1.6}
+.refbtn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:12px;background:linear-gradient(180deg,#3f92e0,#2f7fd6);color:#fff;font-weight:800;font-size:16px;text-decoration:none;box-shadow:0 6px 20px rgba(47,127,214,.3);white-space:nowrap;transition:transform .12s ease}
+.refbtn:hover{transform:translateY(-2px)}
+@media(max-width:560px){.refcta{flex-direction:column;align-items:stretch;text-align:center}.refbtn{justify-content:center}}
 </style>
 </head>
 <body>
@@ -154,7 +161,7 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
     <a class="dlbtn" href="spx-1dte-naked-put-windows.zip" download><span class="ar">⬇</span> 下載程式(Windows・約 36 MB)</a>
   </div>
   <h1>把 S&amp;P 500 波動<br><span class="accent">變成每日現金流</span></h1>
-  <p class="sub">在標普 500 指數選擇權上,每天賣出一份「隔天才到期、履約價在現價下方一小段」的保險,收取權利金。指數只要不在一天內急跌到那裡,保險到期歸零,權利金全數落袋。</p>
+  <p class="sub">每天在美股大盤(標普 500)上賣一份「隔天到期」的保險,收一筆權利金。只要大盤隔天沒有急跌一大段,保險就作廢、權利金整筆進口袋。日積月累,就成了下面這條曲線。</p>
 
   <div class="hero">
     <div><div style="font-size:13px;color:var(--muted);letter-spacing:.08em;margin-bottom:4px">起始資金</div><div class="from">$<span id="h-from"></span></div></div>
@@ -162,14 +169,14 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
     <div><div style="font-size:13px;color:var(--green);letter-spacing:.08em;margin-bottom:4px">8 年後(策略獲利 + SGOV 利息)</div><div class="big">$<span id="h-to"></span></div></div>
     <div class="tag" id="h-ret"></div>
   </div>
-  <p class="sub" style="margin:-14px 0 26px;font-size:14px">金額已含「閒置保證金停在 SGOV 短期美債收息」這層——賣方保證金是抵押、不佔用現金,整份權益可同時收債息。單看選擇權本身則是 $<span id="h-base"></span>(<span id="h-baseret"></span>%)。</p>
+  <p class="sub" style="margin:-14px 0 26px;font-size:14px">這金額還多算了一層利息:賣保險要押一筆保證金,但那筆錢只是「抵押」、沒真的花掉,所以整份本金能同時停在短期美債(SGOV)上生息。只看選擇權本身是 $<span id="h-base"></span>(<span id="h-baseret"></span>%)。</p>
 
   <div class="beatbar">
-    <h2>同樣一筆 $<span id="beat-start"></span>,8 年後本策略滾到 <span class="up">$<span id="beat-strat"></span></span>——<br>是買進持有 <b style="color:#6fb4ff">QQQ</b> 的 <span class="up"><span id="beat-qqq-x"></span> 倍</span>、<b style="color:#8ba0be">SPY</b> 的 <span class="up"><span id="beat-spy-x"></span> 倍</span></h2>
+    <h2>同樣一筆 $<span id="beat-start"></span>,8 年後本策略滾到 <span class="up">$<span id="beat-strat"></span></span>——<br>是買進持有 <b style="color:#2f7fd6">QQQ</b> 的 <span class="up"><span id="beat-qqq-x"></span> 倍</span>、<b style="color:#6b7a92">SPY</b> 的 <span class="up"><span id="beat-spy-x"></span> 倍</span></h2>
     <div class="beatrow">
-      <div class="beatcell win"><div class="lbl"><i style="background:#f5c451"></i>本策略 + SGOV 收息</div><div class="amt">$<span id="beat-strat2"></span></div><div class="mul">+<span id="beat-strat-ret"></span>%(8 年)</div></div>
-      <div class="beatcell"><div class="lbl"><i style="background:#6fb4ff"></i>買進持有 QQQ(那斯達克100)</div><div class="amt">$<span id="beat-qqq"></span></div><div class="mul">+<span id="beat-qqq-ret"></span>% · 本策略多賺 <b style="color:var(--green)">$<span id="beat-qqq-diff"></span></b></div></div>
-      <div class="beatcell"><div class="lbl"><i style="background:#8ba0be"></i>買進持有 SPY(標普500)</div><div class="amt">$<span id="beat-spy"></span></div><div class="mul">+<span id="beat-spy-ret"></span>% · 本策略多賺 <b style="color:var(--green)">$<span id="beat-spy-diff"></span></b></div></div>
+      <div class="beatcell win"><div class="lbl"><i style="background:#d99a1e"></i>本策略 + SGOV 收息</div><div class="amt">$<span id="beat-strat2"></span></div><div class="mul">+<span id="beat-strat-ret"></span>%(8 年)</div></div>
+      <div class="beatcell"><div class="lbl"><i style="background:#2f7fd6"></i>買進持有 QQQ(那斯達克100)</div><div class="amt">$<span id="beat-qqq"></span></div><div class="mul">+<span id="beat-qqq-ret"></span>% · 本策略多賺 <b style="color:var(--green)">$<span id="beat-qqq-diff"></span></b></div></div>
+      <div class="beatcell"><div class="lbl"><i style="background:#6b7a92"></i>買進持有 SPY(標普500)</div><div class="amt">$<span id="beat-spy"></span></div><div class="mul">+<span id="beat-spy-ret"></span>% · 本策略多賺 <b style="color:var(--green)">$<span id="beat-spy-diff"></span></b></div></div>
     </div>
   </div>
 
@@ -177,20 +184,20 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
     <div class="section-t">本策略 vs 買進持有大盤 · 同樣 $<span id="cmp-start"></span> 起始資金 · 策略部位 起始 <span id="lot0" style="color:var(--gold)"></span> 口 → 期末 <span id="lotN" style="color:var(--gold)"></span> 口</div>
     <canvas id="sizecurve" height="300"></canvas>
     <div class="sizelegend">
-      <span><i style="background:#f5c451"></i>策略 + 閒置保證金停 SGOV 收息 · 期末 $<span id="cash-end"></span> <b class="pos">+<span id="cash-ret"></span>%</b></span>
-      <span><i style="background:#22d39a"></i>本策略(獲利滾入、每 $<span id="cap-k"></span>k 加賣一口)· 期末 $<span id="comp-end"></span> <b class="pos">+<span id="comp-ret"></span>%</b></span>
-      <span><i style="background:#6fb4ff"></i>買進持有 QQQ(那斯達克100)· 期末 $<span id="qqq-end"></span> <span id="qqq-ret"></span>%</span>
+      <span><i style="background:#d99a1e"></i>策略 + 閒置保證金停 SGOV 收息 · 期末 $<span id="cash-end"></span> <b class="pos">+<span id="cash-ret"></span>%</b></span>
+      <span><i style="background:#12a06f"></i>本策略(獲利滾入、每 $<span id="cap-k"></span>k 加賣一口)· 期末 $<span id="comp-end"></span> <b class="pos">+<span id="comp-ret"></span>%</b></span>
+      <span><i style="background:#2f7fd6"></i>買進持有 QQQ(那斯達克100)· 期末 $<span id="qqq-end"></span> <span id="qqq-ret"></span>%</span>
       <span><i style="background:#5a6b86"></i>買進持有 SPY(標普500)· 期末 $<span id="spy-end"></span> <span id="spy-ret"></span>%</span>
     </div>
-    <div class="tradehint" style="margin-top:8px">四條線都從同樣的 $<span id="cmp-start2"></span> 起跑,含息計算。灰/藍線是把錢一次全部買進 <b>SPY</b> / <b>QQQ</b> 指數 ETF、抱到底;綠線是本策略每天賣一份隔日到期的保險、獲利滾入後每 $<span id="cap-k2"></span>k 加賣一口。<b>金線</b>再多疊一層:賣方保證金本來就用不到現金,整份權益停在 <b>SGOV(短期美債)</b>邊當抵押邊收利息——選擇權保費 × 現金利息<b>雙層複利</b>。這裡的利息不是固定假設,而是直接套用 <b>SGOV/短債 ETF 的實際歷史日報酬</b>,所以會隨當時利率浮動(2020–21 近 0%、2023–24 約 5%),真實反映各年的短債環境。策略線遠在大盤之上、多賺數倍;代價是用了槓桿,<b>最大回撤與大盤相當(策略 <span id="cmp-dd-s"></span>% vs SPY <span id="cmp-dd-spy"></span>% / QQQ <span id="cmp-dd-qqq"></span>%)——報酬拉高、風險也同步放大,這點務必看清楚。</b></div>
+    <div class="tradehint" style="margin-top:8px">四條線都從同樣的 $<span id="cmp-start2"></span> 出發。灰線、藍線是把錢一次買進 <b>SPY</b> / <b>QQQ</b> 抱到今天;綠線、金線是本策略,金線多算了閒置保證金停 <b>SGOV(短期美債)</b>收的利息(利率用歷史真實值、會隨當年利率浮動)。策略遠贏大盤、多賺數倍;代價是用了槓桿——<b>最大回撤和大盤差不多(策略 <span id="cmp-dd-s"></span>% vs SPY <span id="cmp-dd-spy"></span>% / QQQ <span id="cmp-dd-qqq"></span>%),報酬拉高、風險也同步放大,這點務必看清楚。</b></div>
   </div>
 
   <div class="chartcard">
     <div class="section-t">權益成長曲線 · $<span id="curve-start"></span> 起始 · 逐日複利</div>
     <canvas id="curve" height="330"></canvas>
     <div class="sizelegend" style="margin-top:12px">
-      <span><i style="background:#f5c451"></i>策略 + SGOV 收息 · 期末 $<span id="curve-cash"></span></span>
-      <span><i style="background:#22d39a"></i>純選擇權策略 · 期末 $<span id="curve-base"></span></span>
+      <span><i style="background:#d99a1e"></i>策略 + SGOV 收息 · 期末 $<span id="curve-cash"></span></span>
+      <span><i style="background:#12a06f"></i>純選擇權策略 · 期末 $<span id="curve-base"></span></span>
     </div>
   </div>
 
@@ -232,6 +239,11 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
       <li>隔天重複同樣流程。獲利累積後把新增本金換算成更多口數,規模自然放大。</li>
       <li><b>風險控管:</b>單日指數若急殺穿越履約價,這口就會虧損。因此永遠只用「能承受最壞單日」的資金規模——不重壓、不凹單、不加倉攤平。</li>
     </ol>
+  </div>
+
+  <div class="refcta">
+    <div class="rtxt"><b>想自己跑?先免費開一個 IBKR 帳戶</b><span>這支程式透過 Interactive Brokers(盈透證券)下單。用下面連結免費開戶,會附一個「模擬倉」(假錢),下載程式就能照著 README 一步步試跑,不用先入金、也不會動到真錢。</span></div>
+    <a class="refbtn" href="https://ibkr.com/referral/shanti102" target="_blank" rel="noopener">免費開戶 →</a>
   </div>
 
   <div style="margin-top:30px"><div class="section-t">研究與壓力測試 · 從 <span id="rs-n"></span> 筆交易的多角度檢視</div></div>
@@ -324,18 +336,18 @@ $('beat-spy').textContent=nf(D.spyEnd); $('beat-spy-ret').textContent=D.spyRetur
   const x=i=>pL+(W()-pL-pR)*(i/(pts.length-1)),y=v=>pT+(H-pT-pB)*(1-(v-lo)/(hi-lo));
   function seg(arr,cut){ctx.beginPath();for(let i=0;i<=cut&&i<pts.length;i++){const xx=x(i),yy=y(arr[i]);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}}
   function draw(prog){const w=W();ctx.clearRect(0,0,w,H);
-    ctx.strokeStyle='rgba(29,43,69,.7)';ctx.lineWidth=1;ctx.font='11px system-ui';ctx.fillStyle='#4c5f7e';ctx.textAlign='center';
+    ctx.strokeStyle='rgba(150,165,190,.35)';ctx.lineWidth=1;ctx.font='11px system-ui';ctx.fillStyle='#4c5f7e';ctx.textAlign='center';
     let ly=null;pts.forEach((p,i)=>{const yr=p.date.slice(0,4);if(yr!==ly){ly=yr;if(isM()&&(+yr)%2)return;const xx=x(i);ctx.beginPath();ctx.moveTo(xx,pT);ctx.lineTo(xx,H-pB);ctx.stroke();ctx.fillText(yr,xx,H-8);}});
     const cut=Math.floor(pts.length*prog);
     // 金線(策略+SGOV)面積 + 線
     const g=ctx.createLinearGradient(0,pT,0,H-pB);g.addColorStop(0,'rgba(245,196,81,.28)');g.addColorStop(1,'rgba(245,196,81,0)');
     ctx.beginPath();ctx.moveTo(x(0),H-pB);for(let i=0;i<=cut&&i<pts.length;i++)ctx.lineTo(x(i),y(cashs[i]));ctx.lineTo(x(Math.min(cut,pts.length-1)),H-pB);ctx.closePath();ctx.fillStyle=g;ctx.fill();
-    seg(cashs,cut);ctx.strokeStyle='#f5c451';ctx.lineWidth=2.6;ctx.lineJoin='round';ctx.shadowColor='rgba(245,196,81,.55)';ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
+    seg(cashs,cut);ctx.strokeStyle='#d99a1e';ctx.lineWidth=2.6;ctx.lineJoin='round';ctx.shadowColor='rgba(245,196,81,.55)';ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;
     // 綠線(純策略)
-    seg(eqs,cut);ctx.strokeStyle='#22d39a';ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
+    seg(eqs,cut);ctx.strokeStyle='#12a06f';ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
     if(cut>0){const i=Math.min(cut,pts.length-1);
-      ctx.beginPath();ctx.arc(x(i),y(cashs[i]),4.5,0,7);ctx.fillStyle='#ffe6a3';ctx.fill();
-      ctx.beginPath();ctx.arc(x(i),y(eqs[i]),4,0,7);ctx.fillStyle='#7ef7cf';ctx.fill();}}
+      ctx.beginPath();ctx.arc(x(i),y(cashs[i]),4.5,0,7);ctx.fillStyle='#d99a1e';ctx.fill();
+      ctx.beginPath();ctx.arc(x(i),y(eqs[i]),4,0,7);ctx.fillStyle='#12a06f';ctx.fill();}}
   let t0=null;function anim(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/1400);draw(1-Math.pow(1-p,3));if(p<1)requestAnimationFrame(anim);}requestAnimationFrame(anim);})();
 
 // 策略(+SGOV)vs 買進持有 SPY / QQQ(同樣起始資金)
@@ -346,7 +358,7 @@ $('beat-spy').textContent=nf(D.spyEnd); $('beat-spy-ret').textContent=D.spyRetur
     ctx.strokeStyle=col;ctx.lineWidth=w;ctx.lineJoin='round';if(dash)ctx.setLineDash(dash);if(glow){ctx.shadowColor=glow;ctx.shadowBlur=14;}ctx.stroke();ctx.setLineDash([]);ctx.shadowBlur=0;};
   function draw(anim){const ctx=setupCanvas(cv,H),w=cv.clientWidth,pL=8,pR=8,pT=18,pB=26;ctx.clearRect(0,0,w,H);
     const X=i=>pL+(w-pL-pR)*(i/(pts.length-1)),Y=v=>pT+(H-pT-pB)*(1-(v-lo)/((hi-lo)||1));
-    ctx.strokeStyle='rgba(29,43,69,.7)';ctx.lineWidth=1;ctx.font='11px system-ui';ctx.fillStyle='#4c5f7e';ctx.textAlign='center';
+    ctx.strokeStyle='rgba(150,165,190,.35)';ctx.lineWidth=1;ctx.font='11px system-ui';ctx.fillStyle='#4c5f7e';ctx.textAlign='center';
     let ly=null;pts.forEach((p,i)=>{const y=p.date.slice(0,4);if(y!==ly){ly=y;ctx.beginPath();ctx.moveTo(X(i),pT);ctx.lineTo(X(i),H-pB);ctx.stroke();ctx.fillText(y,X(i),H-8);}});
     const cut=Math.floor(pts.length*anim);
     // 策略(頂線=含 SGOV)相對最強大盤(QQQ)的超額,填色
@@ -358,11 +370,11 @@ $('beat-spy').textContent=nf(D.spyEnd); $('beat-spy-ret').textContent=D.spyRetur
     for(let i=Math.min(cut,pts.length-1);i>=0;i--)ctx.lineTo(X(i),Y(comp[i]));ctx.closePath();
     ctx.fillStyle='rgba(245,196,81,.14)';ctx.fill();
     line(ctx,X,Y,spyv,cut,'#5a6b86',1.8,[5,4],null);   // SPY 灰虛線
-    line(ctx,X,Y,qqqv,cut,'#6fb4ff',1.8,null,null);    // QQQ 藍
-    line(ctx,X,Y,comp,cut,'#22d39a',2.4,null,null);    // 策略 綠
-    line(ctx,X,Y,cashv,cut,'#f5c451',2.6,null,'rgba(245,196,81,.55)'); // 策略+SGOV 金發光
-    if(cut>0){const i=Math.min(cut,pts.length-1);ctx.fillStyle='#ffe6a3';ctx.beginPath();ctx.arc(X(i),Y(cashv[i]),4.5,0,7);ctx.fill();
-      ctx.fillStyle='#f5c451';ctx.textAlign='right';ctx.font='bold 12px system-ui';ctx.fillText(pts[i].lots+' 口',X(i)-8,Y(comp[i])+16);}}
+    line(ctx,X,Y,qqqv,cut,'#2f7fd6',1.8,null,null);    // QQQ 藍
+    line(ctx,X,Y,comp,cut,'#12a06f',2.4,null,null);    // 策略 綠
+    line(ctx,X,Y,cashv,cut,'#d99a1e',2.6,null,'rgba(245,196,81,.55)'); // 策略+SGOV 金發光
+    if(cut>0){const i=Math.min(cut,pts.length-1);ctx.fillStyle='#d99a1e';ctx.beginPath();ctx.arc(X(i),Y(cashv[i]),4.5,0,7);ctx.fill();
+      ctx.fillStyle='#d99a1e';ctx.textAlign='right';ctx.font='bold 12px system-ui';ctx.fillText(pts[i].lots+' 口',X(i)-8,Y(comp[i])+16);}}
   let t0=null;function a(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/1400);draw(1-Math.pow(1-p,3));if(p<1)requestAnimationFrame(a);}requestAnimationFrame(a);
   addEventListener('resize',()=>draw(1));})();
 
@@ -387,7 +399,7 @@ function setupCanvas(cv,H){cv.width=cv.clientWidth*dpr();cv.height=H*dpr();const
   function draw(){const ctx=setupCanvas(cv,H),w=cv.clientWidth,pL=40,pR=12,pT=12,pB=22;ctx.clearRect(0,0,w,H);
     let peak=-1e18;const dd=c.map(p=>{peak=Math.max(peak,p.equity);return (p.equity-peak)/peak*100;});
     const lo=Math.min(...dd),X=i=>pL+(w-pL-pR)*(i/(c.length-1)),Y=v=>pT+(H-pT-pB)*(v/(lo||-1));
-    ctx.strokeStyle='rgba(29,43,69,.7)';ctx.font='10px system-ui';ctx.fillStyle='#4c5f7e';ctx.textAlign='center';let ly=null;
+    ctx.strokeStyle='rgba(150,165,190,.35)';ctx.font='10px system-ui';ctx.fillStyle='#4c5f7e';ctx.textAlign='center';let ly=null;
     c.forEach((p,i)=>{const y=p.date.slice(0,4);if(y!==ly){ly=y;ctx.beginPath();ctx.moveTo(X(i),pT);ctx.lineTo(X(i),H-pB);ctx.stroke();ctx.fillText(y,X(i),H-8);}});
     ctx.textAlign='right';[0,lo/2,lo].forEach(v=>ctx.fillText(v.toFixed(0)+'%',pL-4,Y(v)+3));
     const g=ctx.createLinearGradient(0,pT,0,H-pB);g.addColorStop(0,'rgba(255,93,108,.05)');g.addColorStop(1,'rgba(255,93,108,.45)');
@@ -423,7 +435,7 @@ function setupCanvas(cv,H){cv.width=cv.clientWidth*dpr();cv.height=H*dpr();const
     ctx.fillStyle='#4c5f7e';ctx.font='10px system-ui';ctx.textAlign='right';[hi,0,lo].forEach(v=>ctx.fillText(v.toFixed(0)+'%',pL-4,Y(v)+3));
     const g=ctx.createLinearGradient(0,pT,0,H-pB);g.addColorStop(0,'rgba(111,180,255,.3)');g.addColorStop(1,'rgba(111,180,255,0)');
     ctx.beginPath();ctx.moveTo(X(0),Y(0));roll.forEach((r,k)=>ctx.lineTo(X(k),Y(r.v)));ctx.lineTo(X(roll.length-1),Y(0));ctx.closePath();ctx.fillStyle=g;ctx.fill();
-    ctx.beginPath();roll.forEach((r,k)=>{const xx=X(k),yy=Y(r.v);k?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);});ctx.strokeStyle='#6fb4ff';ctx.lineWidth=1.8;ctx.stroke();}
+    ctx.beginPath();roll.forEach((r,k)=>{const xx=X(k),yy=Y(r.v);k?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);});ctx.strokeStyle='#2f7fd6';ctx.lineWidth=1.8;ctx.stroke();}
   draw();addEventListener('resize',draw);})();
 
 // 賣出價外距離分布(cushion% = 履約價在指數下方多少;log 高度讓高波動日的深價外尾巴也看得到)
@@ -438,13 +450,13 @@ function setupCanvas(cv,H){cv.width=cv.clientWidth*dpr();cv.height=H*dpr();const
     for(let i=0;i<NB;i++){if(!bins[i])continue;const h=(Math.log10(1+bins[i])/mxl)*(H-pT-pB),x=pL+i*bwpx;
       ctx.fillStyle='rgba(245,196,81,.82)';ctx.fillRect(x+1.5,H-pB-h,bwpx-3,h);}
     // x 軸刻度(最後留給 8%+ 溢位格,避免與 8% 重疊)
-    ctx.fillStyle='#8ba0be';ctx.font='10px system-ui';ctx.textAlign='center';
+    ctx.fillStyle='#6b7a92';ctx.font='10px system-ui';ctx.textAlign='center';
     for(let g=0;g<MAXC;g+=2){const x=pL+(g/BW)*bwpx;ctx.fillText(g+'%',x,H-8);}
     ctx.fillText('8%+',pL+(NB-0.5)*bwpx,H-8);
     // 平均緩衝墊線
     const mx=pL+(mean/BW)*bwpx;ctx.strokeStyle='rgba(34,211,154,.6)';ctx.setLineDash([4,3]);ctx.lineWidth=1.2;
     ctx.beginPath();ctx.moveTo(mx,pT+2);ctx.lineTo(mx,H-pB);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle='#22d39a';ctx.textAlign='left';ctx.fillText('平均 '+mean.toFixed(1)+'% 緩衝',mx+4,H-pB-6);
+    ctx.fillStyle='#12a06f';ctx.textAlign='left';ctx.fillText('平均 '+mean.toFixed(1)+'% 緩衝',mx+4,H-pB-6);
     ctx.fillStyle='#3a4a66';ctx.textAlign='right';ctx.fillText('高度=筆數(對數)',w-pR,pT+4);}
   draw();addEventListener('resize',draw);})();
 
@@ -550,22 +562,22 @@ function drawReplay(f){const t=RC.t,cv=$('replay'),ctx=cv.getContext('2d'),H=230
   ctx.fillStyle='#4c5f7e';ctx.font='10px system-ui';ctx.textAlign='right';ctx.fillText('$0',pL-4,Y(0)+3);
   // 停利目標線(綠色虛線)
   ctx.strokeStyle='rgba(34,211,154,.7)';ctx.setLineDash([6,4]);ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(pL,Y(tp));ctx.lineTo(w-pR,Y(tp));ctx.stroke();ctx.setLineDash([]);
-  ctx.fillStyle='#22d39a';ctx.font='10px system-ui';ctx.textAlign='left';ctx.fillText('停利目標 +$'+nf(Math.round(tp)),pL+4,Y(tp)-4);
+  ctx.fillStyle='#12a06f';ctx.font='10px system-ui';ctx.textAlign='left';ctx.fillText('停利目標 +$'+nf(Math.round(tp)),pL+4,Y(tp)-4);
   // SPX 背景線(淡)
   ctx.strokeStyle='rgba(111,180,255,.5)';ctx.lineWidth=1.4;ctx.beginPath();
   for(let i=0;i<spx.length;i++){const xx=X(i),yy=Ys(spx[i]);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.globalAlpha=.35;ctx.stroke();ctx.globalAlpha=1;
   // 浮動獲利線(已播放金實線 / 未播放淡線)
   ctx.strokeStyle='rgba(245,196,81,.28)';ctx.lineWidth=2;ctx.beginPath();
   for(let i=0;i<pnl.length;i++){const xx=X(i),yy=Y(pnl[i]);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.stroke();
-  ctx.strokeStyle='#f5c451';ctx.lineWidth=2.4;ctx.shadowColor='rgba(245,196,81,.5)';ctx.shadowBlur=6;ctx.beginPath();
+  ctx.strokeStyle='#d99a1e';ctx.lineWidth=2.4;ctx.shadowColor='rgba(245,196,81,.5)';ctx.shadowBlur=6;ctx.beginPath();
   for(let i=0;i<=f&&i<pnl.length;i++){const xx=X(i),yy=Y(pnl[i]);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.stroke();ctx.shadowBlur=0;
   // playhead + 當前點
   const ci=Math.min(f,pnl.length-1);
   ctx.strokeStyle='rgba(245,196,81,.6)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(X(ci),pT);ctx.lineTo(X(ci),H-pB);ctx.stroke();
-  ctx.fillStyle='#f5c451';ctx.beginPath();ctx.arc(X(ci),Y(pnl[ci]),4.5,0,7);ctx.fill();
+  ctx.fillStyle='#d99a1e';ctx.beginPath();ctx.arc(X(ci),Y(pnl[ci]),4.5,0,7);ctx.fill();
   // 角落即時數字
-  ctx.textAlign='left';ctx.font='11px system-ui';ctx.fillStyle='#f5c451';ctx.fillText('浮動 '+money(pnl[ci]),pL+4,pT-2);
-  ctx.textAlign='right';ctx.fillStyle='#6fb4ff';ctx.fillText('SPX '+nf(spx[ci]),w-pR,pT-2);}
+  ctx.textAlign='left';ctx.font='11px system-ui';ctx.fillStyle='#d99a1e';ctx.fillText('浮動 '+money(pnl[ci]),pL+4,pT-2);
+  ctx.textAlign='right';ctx.fillStyle='#2f7fd6';ctx.fillText('SPX '+nf(spx[ci]),w-pR,pT-2);}
 
 function drawPayoff(f){const t=RC.t,cv=$('payoff'),ctx=cv.getContext('2d'),H=230;
   cv.width=cv.clientWidth*dpr();cv.height=H*dpr();ctx.setTransform(dpr(),0,0,dpr(),0,0);
@@ -596,12 +608,12 @@ function drawPayoff(f){const t=RC.t,cv=$('payoff'),ctx=cv.getContext('2d'),H=230
   // 走過的軌跡
   ctx.strokeStyle='rgba(245,196,81,.5)';ctx.lineWidth=1.4;ctx.beginPath();
   for(let k=0;k<=i;k++){const xx=X(rp[k][0]),yy=Y(100*(prem-rp[k][1]));k?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.stroke();
-  ctx.fillStyle='#f5c451';ctx.shadowColor='rgba(245,196,81,.8)';ctx.shadowBlur=10;ctx.beginPath();ctx.arc(X(curS),Y(curPnl),5,0,7);ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='#d99a1e';ctx.shadowColor='rgba(245,196,81,.8)';ctx.shadowBlur=10;ctx.beginPath();ctx.arc(X(curS),Y(curPnl),5,0,7);ctx.fill();ctx.shadowBlur=0;
   // 圖例
   ctx.textAlign='right';ctx.font='11px system-ui';
   ctx.fillStyle='#31d0e0';ctx.fillText('到期損益',w-pR,pT+2);
   ctx.fillStyle='#b28bff';ctx.fillText('進場當下',w-pR,pT+16);
-  ctx.fillStyle='#f5c451';ctx.fillText('即時浮動 '+money(curPnl),w-pR,pT+30);}
+  ctx.fillStyle='#d99a1e';ctx.fillText('即時浮動 '+money(curPnl),w-pR,pT+30);}
 
 addEventListener('resize',()=>{if(RC)drawFrame(RC.frame);});
 // 預設打開最後一天
