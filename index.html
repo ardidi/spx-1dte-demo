@@ -196,6 +196,22 @@ html{scroll-snap-type:y proximity}
 #slide-num .beatcell .amt{font-size:clamp(26px,4.6vw,40px)}
 #slide-num .stats .v{font-size:clamp(26px,4vw,38px)}
 @media(max-width:560px){.stage-cap,.stage-end{display:none}}
+.liveinfo{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 18px;margin:2px 0 10px;font-size:13.5px;color:var(--muted)}
+.liveinfo .livedate{font-size:17px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.liveinfo b{color:var(--ink)}
+.liveinfo .liveclock{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
+.livewrap{position:relative}
+.liveresult{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%) scale(.6);text-align:center;opacity:0;transition:opacity .3s ease,transform .35s cubic-bezier(.2,1.5,.4,1);pointer-events:none;white-space:nowrap}
+.liveresult.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.liveresult .ramt{font-size:clamp(34px,5.4vw,56px);font-weight:800;letter-spacing:-.02em;text-shadow:0 4px 30px rgba(255,255,255,.95),0 0 14px rgba(255,255,255,.9)}
+.liveresult .ramt.pos{color:var(--green)}
+.liveresult .ramt.neg{color:#e2455a}
+.liveresult .rsub{font-size:14.5px;font-weight:600;color:var(--ink);margin-top:2px;text-shadow:0 2px 12px rgba(255,255,255,.95)}
+.livetally{margin-top:10px;font-size:13.5px;color:var(--muted)}
+.livetally b{font-variant-numeric:tabular-nums}
+.livejump{display:inline-block;margin-top:12px;font-size:13.5px;font-weight:700;color:var(--accent2,#1b6ac9);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:7px 16px;background:#fff;transition:box-shadow .2s ease,transform .2s ease}
+.livejump:hover{box-shadow:0 8px 24px -12px rgba(31,60,110,.45);transform:translateY(-1px)}
+#ledger{scroll-margin-top:16px}
 </style>
 </head>
 <body>
@@ -257,6 +273,19 @@ html{scroll-snap-type:y proximity}
     <details class="more"><summary>這張圖怎麼看</summary>
     <div class="tradehint" style="margin-top:2px">四條線都從同樣的 $<span id="cmp-start2"></span> 出發。灰線、藍線是把錢一次買進 <b>SPY</b> / <b>QQQ</b> 抱到今天;綠線、金線是本策略,金線多算了閒置保證金停 <b>SGOV(短期美債)</b>收的利息(利率用歷史真實值、會隨當年利率浮動)。策略遠贏大盤、多賺數倍;代價是用了槓桿——<b>最大回撤和大盤差不多(策略 <span id="cmp-dd-s"></span>% vs SPY <span id="cmp-dd-spy"></span>% / QQQ <span id="cmp-dd-qqq"></span>%),報酬拉高、風險也同步放大,這點務必看清楚。</b></div>
     </details>
+  </div>
+  </div></section>
+
+  <section class="slide" id="slide-live"><div class="slide-in">
+  <div class="chartcard">
+    <div class="section-t">它每天實際在做的事 · 盤中實況,一天接一天自動連播</div>
+    <div class="liveinfo"><span class="livedate" id="lv-date"></span><span id="lv-meta"></span><span class="liveclock" id="lv-clock"></span></div>
+    <div class="livewrap">
+      <canvas id="livecv" height="320"></canvas>
+      <div class="liveresult" id="lv-res"></div>
+    </div>
+    <div class="livetally">已連播 <b id="lv-n">0</b> 天 · 這段期間累計 <b id="lv-sum" class="pos">+$0</b> · 金線=當下浮動獲利,碰到綠虛線就提前停利</div>
+    <a class="livejump" href="#ledger">想自己挑一天來播?跳到最下面的完整交易台帳,<span id="lv-total"></span> 天隨你點 ↓</a>
   </div>
   </div></section>
 
@@ -358,7 +387,7 @@ html{scroll-snap-type:y proximity}
     </div>
   </div>
 
-  <div class="ledgercard" style="margin-top:22px">
+  <div class="ledgercard" id="ledger" style="margin-top:22px">
     <h3>完整交易台帳 · 每一筆的進場與出場</h3>
     <div class="tradehint">共 <span id="led-n"></span> 筆,可捲動;點一列自動回放。近期在最上方。</div>
     <div class="ledgerwrap"><table class="led">
@@ -440,7 +469,7 @@ $('beat-spy').textContent=nf(D.spyEnd); $('beat-spy-ret').textContent=D.spyRetur
 // Apple 式數字:捲進畫面時從 0 跳升到終值
 (function(){if(!('IntersectionObserver'in window))return;
   const ease=t=>1-Math.pow(1-t,3);
-  function run(el,to,dec,comma,suf){let t0=null;const DUR=1100;suf=suf||'';
+  function run(el,to,dec,comma,suf){let t0=null;const DUR=2400;suf=suf||'';
     function step(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/DUR),v=to*ease(p);
       el.textContent=(comma?Math.round(v).toLocaleString('en-US'):v.toFixed(dec))+suf;
       if(p<1)requestAnimationFrame(step);else el.textContent=(comma?Math.round(to).toLocaleString('en-US'):to.toFixed(dec))+suf;}
@@ -512,12 +541,67 @@ $('beat-spy').textContent=nf(D.spyEnd); $('beat-spy-ret').textContent=D.spyRetur
     if(cut>0){const i=Math.min(cut,pts.length-1);ctx.fillStyle='#d99a1e';ctx.beginPath();ctx.arc(X(i),Y(cashv[i]),4.5,0,7);ctx.fill();
       ctx.fillStyle='#d99a1e';ctx.textAlign='right';ctx.font='bold 12px system-ui';ctx.fillText(pts[i].lots+' 口',X(i)-8,Y(comp[i])+16);}}
   let started=false;
-  function start(){if(started)return;started=true;let t0=null;function a(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/1600);draw(1-Math.pow(1-p,3));if(p<1)requestAnimationFrame(a);}requestAnimationFrame(a);}
+  function start(){if(started)return;started=true;let t0=null;function a(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/3400);draw(1-Math.pow(1-p,3));if(p<1)requestAnimationFrame(a);}requestAnimationFrame(a);}
   draw(0);
   if('IntersectionObserver'in window){const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){start();io.disconnect();}});},{threshold:.35});io.observe(cv);}else start();
   addEventListener('resize',()=>draw(started?1:0));})();
 
 const T=D.tradeList;
+
+// 第四屏:每日盤中實況連續回放(播完亮出當天損益,停一下換下一天;離開畫面自動暫停)
+(function(){const cv=$('livecv');if(!cv)return;const L=D.tradeList;if(!L||!L.length)return;
+  const H=320;let idx=Math.max(0,L.length-90),days=0,sum=0,visible=false,mode='play',frame=0,raf=null,holdT=0,last=null;
+  function fmtC(t,p){return new Date(t.rt0+p[2]*60000).toLocaleTimeString('zh-TW',{timeZone:'America/New_York',hour12:false,hour:'2-digit',minute:'2-digit'});}
+  function setInfo(t){$('lv-date').textContent=t.eDate;
+    $('lv-meta').innerHTML='賣出 <b>'+nf(t.strike)+'</b> 賣權('+((t.strike-t.eSpx)/t.eSpx*100).toFixed(1)+'%)· 收權利金 <b class="pos">+$'+nf(t.credit)+'</b>';}
+  function draw(t,ff){const f=Math.floor(ff);
+    cv.width=cv.clientWidth*dpr();cv.height=H*dpr();const ctx=cv.getContext('2d');ctx.setTransform(dpr(),0,0,dpr(),0,0);
+    const w=cv.clientWidth,pL=52,pR=54,pT=18,pB=24;ctx.clearRect(0,0,w,H);
+    const rp=t.replay;if(rp.length<2)return;
+    const prem=t.credit/100,tp=0.78*t.credit;
+    const pnl=rp.map(p=>100*(prem-p[1])),spx=rp.map(p=>p[0]);
+    const X=i=>pL+(w-pL-pR)*(i/(rp.length-1));
+    let lo=Math.min(0,tp,...pnl),hi=Math.max(0,tp,...pnl);const yp=(hi-lo)*0.12||1;lo-=yp;hi+=yp;
+    const Y=v=>pT+(H-pT-pB)*(1-(v-lo)/((hi-lo)||1));
+    const sLo=Math.min(...spx,t.strike),sHi=Math.max(...spx);
+    const Ys=v=>pT+(H-pT-pB)*(1-(v-sLo)/((sHi-sLo)||1));
+    ctx.strokeStyle='rgba(139,160,190,.3)';ctx.setLineDash([4,4]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,Y(0));ctx.lineTo(w-pR,Y(0));ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#4c5f7e';ctx.font='10px system-ui';ctx.textAlign='right';ctx.fillText('$0',pL-4,Y(0)+3);
+    ctx.strokeStyle='rgba(34,211,154,.7)';ctx.setLineDash([6,4]);ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(pL,Y(tp));ctx.lineTo(w-pR,Y(tp));ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#12a06f';ctx.font='10px system-ui';ctx.textAlign='left';ctx.fillText('停利目標 +$'+nf(Math.round(tp)),pL+4,Y(tp)-4);
+    ctx.strokeStyle='rgba(111,180,255,.5)';ctx.lineWidth=1.4;ctx.globalAlpha=.35;ctx.beginPath();
+    for(let i=0;i<spx.length;i++){const xx=X(i),yy=Ys(spx[i]);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.stroke();ctx.globalAlpha=1;
+    ctx.strokeStyle='rgba(245,196,81,.25)';ctx.lineWidth=2;ctx.beginPath();
+    for(let i=0;i<pnl.length;i++){const xx=X(i),yy=Y(pnl[i]);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.stroke();
+    ctx.strokeStyle='#d99a1e';ctx.lineWidth=2.6;ctx.shadowColor='rgba(245,196,81,.5)';ctx.shadowBlur=6;ctx.beginPath();
+    for(let i=0;i<=f&&i<pnl.length;i++){const xx=X(i),yy=Y(pnl[i]);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.stroke();ctx.shadowBlur=0;
+    const ci=Math.min(f,pnl.length-1);
+    ctx.strokeStyle='rgba(245,196,81,.6)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(X(ci),pT);ctx.lineTo(X(ci),H-pB);ctx.stroke();
+    ctx.fillStyle='#d99a1e';ctx.beginPath();ctx.arc(X(ci),Y(pnl[ci]),4.5,0,7);ctx.fill();
+    ctx.textAlign='left';ctx.font='11px system-ui';ctx.fillStyle='#d99a1e';ctx.fillText('浮動 '+money(pnl[ci]),pL+4,pT-4);
+    ctx.textAlign='right';ctx.fillStyle='#2f7fd6';ctx.fillText('SPX '+nf(spx[ci]),w-pR,pT-4);
+    $('lv-clock').textContent=fmtC(t,rp[ci])+' ET';}
+  function showRes(t){const el=$('lv-res'),win=t.pnl>=0,ex=t.status==='EXPIRED';
+    const sub=win?(ex?'到期歸零,權利金全收':'提前停利,獲利落袋'):'跌破履約價,這天賠錢';
+    el.innerHTML='<div class="ramt '+(win?'pos':'neg')+'">'+money(t.pnl)+'</div><div class="rsub">'+sub+'</div>';
+    el.classList.add('show');}
+  function tally(t){days++;sum+=t.pnl;$('lv-n').textContent=days;const s=$('lv-sum');s.textContent=money(sum);s.className=sum>=0?'pos':'neg';}
+  function step(ts){raf=null;if(!visible)return;
+    if(!last)last=ts;const dt=ts-last;last=ts;
+    const t=L[idx];
+    if(mode==='play'){frame+=dt/45;
+      if(frame>=t.replay.length-1){frame=t.replay.length-1;draw(t,frame);showRes(t);tally(t);mode='hold';holdT=0;}
+      else draw(t,frame);}
+    else{holdT+=dt;if(holdT>=1600){$('lv-res').classList.remove('show');idx=(idx+1)%L.length;frame=0;mode='play';setInfo(L[idx]);}}
+    raf=requestAnimationFrame(step);}
+  function ensure(){if(!raf&&visible){last=null;raf=requestAnimationFrame(step);}}
+  const tot=$('lv-total');if(tot)tot.textContent=nf(L.length);
+  setInfo(L[idx]);draw(L[idx],0);
+  if('IntersectionObserver'in window){
+    const io=new IntersectionObserver(es=>{es.forEach(e=>{visible=e.isIntersecting;if(visible)ensure();});},{threshold:.3});
+    io.observe(cv);}
+  else{visible=true;ensure();}
+  addEventListener('resize',()=>{if(!raf)draw(L[idx],frame);});})();
 
 // ── 研究圖:通用工具 ──
 function setupCanvas(cv,H){cv.width=cv.clientWidth*dpr();cv.height=H*dpr();const ctx=cv.getContext('2d');ctx.setTransform(dpr(),0,0,dpr(),0,0);return ctx;}
