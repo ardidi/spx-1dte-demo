@@ -33,13 +33,17 @@ canvas{display:block;width:100%}
 @media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
 .yearcard,.how,.ledgercard{padding:24px 22px}
 .yearcard h3,.how h3,.ledgercard h3{font-size:15px;margin-bottom:14px}
-.ybar{display:flex;align-items:center;gap:12px;margin:9px 0;font-size:14px}
-.ybar .yl{width:44px;color:var(--muted);font-variant-numeric:tabular-nums}
-.ybar .track{flex:1;height:22px;background:#e9eef6;border-radius:6px;overflow:hidden}
-.ybar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#128a63,#12a06f);box-shadow:0 0 16px var(--glow)}
-.ybar .fill.neg{background:linear-gradient(90deg,#8a1f2a,#ff5d6c)}
-.ybar .yv{width:78px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
-.ybar .yv.pos{color:var(--green)}.ybar .yv.neg{color:var(--red)}
+.ybar{display:flex;align-items:center;gap:10px;margin:10px 0;font-size:14px}
+.ybar .yl{width:40px;color:var(--muted);font-variant-numeric:tabular-nums}
+.ybar .track{flex:1;height:22px;background:#e9eef6;border-radius:6px;overflow:hidden;position:relative}
+.ybar .track::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(90,110,140,.4)}
+.ybar .fill{position:absolute;top:0;height:100%;width:0;transition:width 1s cubic-bezier(.25,.9,.3,1)}
+.ybar .fill.pos{left:50%;border-radius:0 6px 6px 0;background:linear-gradient(90deg,#128a63,#12a06f);box-shadow:0 0 16px var(--glow)}
+.ybar .fill.neg{right:50%;border-radius:6px 0 0 6px;background:linear-gradient(270deg,#8a1f2a,#ff5d6c)}
+.ybar .yp{width:58px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.ybar .yv{width:84px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:12.5px;color:var(--muted)}
+.ybar .yp.pos{color:var(--green)}.ybar .yp.neg{color:var(--red)}
+@media(max-width:560px){.ybar .yv{display:none}}
 .how ul{list-style:none;display:grid;gap:12px}
 .how li{display:flex;gap:12px;color:#3a4a63;font-size:15px}
 .how li .n{flex:none;width:26px;height:26px;border-radius:8px;background:rgba(245,196,81,.12);color:var(--gold);display:grid;place-items:center;font-weight:700;font-size:13px;border:1px solid rgba(245,196,81,.3)}
@@ -318,7 +322,7 @@ html{scroll-snap-type:y proximity}
   </div>
 
   <div class="grid2">
-    <div class="yearcard"><h3>逐年獲利 (複利 $)</h3><div id="years"></div></div>
+    <div class="yearcard"><h3>逐年獲利 · 長條=當年報酬率</h3><div id="years"></div></div>
     <div class="how"><h3>策略怎麼運作</h3><ul>
       <li><span class="n">1</span><span>每個交易日,在標普 500 指數(SPX)賣出一份「到期日在隔天、履約價在現價下方約 1–3% 」的賣權(7 Delta,隔天跌破機率僅約 7%)。</span></li>
       <li><span class="n">2</span><span>指數只要沒在一天內暴跌到那個價位,這份合約到期就一文不值——權利金 100% 是你的。</span></li>
@@ -489,10 +493,18 @@ $('beat-spy').textContent=nf(D.spyEnd); $('beat-spy-ret').textContent=D.spyRetur
   const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});},{threshold:.3});
   els.forEach(el=>io.observe(el));})();
 
-// 逐年
-(function(){const mx=Math.max(...D.byYear.map(y=>Math.abs(y.pnl)));
-  $('years').innerHTML=D.byYear.map(y=>{const w=(Math.abs(y.pnl)/mx*100).toFixed(1),neg=y.pnl<0;
-    return '<div class="ybar"><span class="yl">'+y.year+'</span><span class="track"><span class="fill'+(neg?' neg':'')+'" style="width:'+w+'%"></span></span><span class="yv '+(neg?'neg':'pos')+'">'+money(y.pnl)+'</span></div>';}).join('');})();
+// 逐年:bar 寬=當年報酬率(用年初權益當基底,跨年才可比較),右側同時給 % 跟 $
+(function(){const box=$('years');if(!box)return;
+  let base=D.startEquity;
+  const rows=D.byYear.map(y=>{const ret=y.pnl/base*100;base+=y.pnl;return {year:y.year,pnl:y.pnl,ret:ret};});
+  const mx=Math.max(...rows.map(r=>Math.abs(r.ret)));
+  box.innerHTML=rows.map(r=>{const neg=r.pnl<0,w=Math.max(0.6,Math.abs(r.ret)/mx*50);
+    return '<div class="ybar"><span class="yl">'+r.year+'</span><span class="track"><span class="fill '+(neg?'neg':'pos')+'" data-w="'+w.toFixed(1)+'"></span></span><span class="yp '+(neg?'neg':'pos')+'">'+(neg?'':'+')+r.ret.toFixed(1)+'%</span><span class="yv">'+money(r.pnl)+'</span></div>';}).join('');
+  function grow(){box.querySelectorAll('.fill').forEach(function(f,i){f.style.transitionDelay=(i*90)+'ms';f.style.width=f.getAttribute('data-w')+'%';});}
+  if('IntersectionObserver'in window){
+    const io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){grow();io.disconnect();}});},{threshold:.4});
+    io.observe(box);}
+  else grow();})();
 
 // 權益曲線
 (function(){const cv=$('curve'),ctx=cv.getContext('2d'),pts=D.curve,H=330;
