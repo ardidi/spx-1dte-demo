@@ -152,6 +152,13 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
 .refbtn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:12px;background:linear-gradient(180deg,#3f92e0,#2f7fd6);color:#fff;font-weight:800;font-size:16px;text-decoration:none;box-shadow:0 6px 20px rgba(47,127,214,.3);white-space:nowrap;transition:transform .12s ease}
 .refbtn:hover{transform:translateY(-2px)}
 @media(max-width:560px){.refcta{flex-direction:column;align-items:stretch;text-align:center}.refbtn{justify-content:center}}
+details.more{margin:8px 0 2px}
+details.more>summary{cursor:pointer;list-style:none;color:var(--blue);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;user-select:none;padding:2px 0}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"＋";font-weight:800;font-size:14px}
+details.more[open]>summary::before{content:"－"}
+details.more[open]>summary{margin-bottom:6px}
+details.more>summary:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -189,7 +196,9 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
       <span><i style="background:#2f7fd6"></i>買進持有 QQQ(那斯達克100)· 期末 $<span id="qqq-end"></span> <span id="qqq-ret"></span>%</span>
       <span><i style="background:#5a6b86"></i>買進持有 SPY(標普500)· 期末 $<span id="spy-end"></span> <span id="spy-ret"></span>%</span>
     </div>
-    <div class="tradehint" style="margin-top:8px">四條線都從同樣的 $<span id="cmp-start2"></span> 出發。灰線、藍線是把錢一次買進 <b>SPY</b> / <b>QQQ</b> 抱到今天;綠線、金線是本策略,金線多算了閒置保證金停 <b>SGOV(短期美債)</b>收的利息(利率用歷史真實值、會隨當年利率浮動)。策略遠贏大盤、多賺數倍;代價是用了槓桿——<b>最大回撤和大盤差不多(策略 <span id="cmp-dd-s"></span>% vs SPY <span id="cmp-dd-spy"></span>% / QQQ <span id="cmp-dd-qqq"></span>%),報酬拉高、風險也同步放大,這點務必看清楚。</b></div>
+    <details class="more"><summary>這張圖怎麼看</summary>
+    <div class="tradehint" style="margin-top:2px">四條線都從同樣的 $<span id="cmp-start2"></span> 出發。灰線、藍線是把錢一次買進 <b>SPY</b> / <b>QQQ</b> 抱到今天;綠線、金線是本策略,金線多算了閒置保證金停 <b>SGOV(短期美債)</b>收的利息(利率用歷史真實值、會隨當年利率浮動)。策略遠贏大盤、多賺數倍;代價是用了槓桿——<b>最大回撤和大盤差不多(策略 <span id="cmp-dd-s"></span>% vs SPY <span id="cmp-dd-spy"></span>% / QQQ <span id="cmp-dd-qqq"></span>%),報酬拉高、風險也同步放大,這點務必看清楚。</b></div>
+    </details>
   </div>
 
   <div class="chartcard">
@@ -220,7 +229,8 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
 
   <div class="how" style="margin-top:22px">
     <h3>實際操作 · 一步一步怎麼下單</h3>
-    <div class="spec">
+    <details class="more"><summary>展開完整規格與逐步教學</summary>
+    <div class="spec" style="margin-top:10px">
       <div class="specrow"><span>交易標的</span><b>S&amp;P 500 指數選擇權(SPXW)· 現金結算 · 歐式</b></div>
       <div class="specrow"><span>合約方向</span><b>賣出賣權 Sell Put · 單腿裸賣</b></div>
       <div class="specrow"><span>到期天數</span><b>1 天(隔日到期,1DTE)</b></div>
@@ -239,6 +249,7 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
       <li>隔天重複同樣流程。獲利累積後把新增本金換算成更多口數,規模自然放大。</li>
       <li><b>風險控管:</b>單日指數若急殺穿越履約價,這口就會虧損。因此永遠只用「能承受最壞單日」的資金規模——不重壓、不凹單、不加倉攤平。</li>
     </ol>
+    </details>
   </div>
 
   <div class="refcta">
