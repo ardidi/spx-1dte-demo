@@ -159,9 +159,50 @@ details.more>summary::before{content:"＋";font-weight:800;font-size:14px}
 details.more[open]>summary::before{content:"－"}
 details.more[open]>summary{margin-bottom:6px}
 details.more>summary:hover{text-decoration:underline}
+.stage{position:relative;width:100vw;margin-left:calc(50% - 50vw);margin-top:-48px;min-height:94vh;display:flex;align-items:center;overflow:hidden;background:radial-gradient(1100px 640px at 78% 6%,#e7f0fb 0%,#f5f8fd 58%,#eef4fc 100%)}
+.stage>canvas{position:absolute;inset:0;width:100%;height:100%}
+.stage-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(245,248,253,.94) 0%,rgba(245,248,253,.74) 32%,rgba(245,248,253,0) 60%)}
+.stage-in{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:0 34px;width:100%}
+.stage-eyebrow{font-size:15px;color:var(--muted);letter-spacing:.04em;margin-bottom:8px}
+.stage-num{font-size:clamp(48px,9.4vw,108px);font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--gold);text-shadow:0 8px 34px rgba(200,144,26,.28);font-variant-numeric:tabular-nums}
+.stage-num::before{content:"$";font-size:.56em;font-weight:700;vertical-align:.06em;margin-right:.04em}
+.stage-reveal{opacity:0;transform:translateY(16px);transition:opacity .75s ease,transform .75s ease}
+.stage-reveal.show{opacity:1;transform:none}
+.stage-title{font-size:clamp(32px,5.6vw,62px);font-weight:800;letter-spacing:-.02em;line-height:1.08;margin:22px 0 12px}
+.stage-title .accent{background:linear-gradient(120deg,#0f9264,#16b57e 60%,#0f9264);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stage-sub{color:var(--muted);font-size:clamp(15px,1.8vw,18px);max-width:520px;margin-bottom:24px}
+.stage-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.stage-leg{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.stage-leg span{display:inline-flex;align-items:center;gap:7px}
+.stage-leg i{width:16px;height:3px;border-radius:2px;display:inline-block}
+.scrollcue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:2;font-size:13px;color:var(--muted);text-align:center;animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
+@media(max-width:560px){.stage{margin-top:-22px;min-height:88vh}.stage-in{padding:0 16px}.stage-scrim{background:linear-gradient(180deg,rgba(245,248,253,.9) 34%,rgba(245,248,253,.5) 100%)}.stage-num{font-size:clamp(42px,13vw,64px)}}
 </style>
 </head>
 <body>
+<section class="stage">
+  <canvas id="herochart"></canvas>
+  <div class="stage-scrim"></div>
+  <div class="stage-in">
+    <div class="stage-eyebrow">本金 $<span id="st-from"></span> · 每天在標普 500 收一次租金 · 8 年後</div>
+    <div class="stage-num"><span id="st-num">100,000</span></div>
+    <div class="stage-reveal" id="st-rest">
+      <div class="stage-title">每天收租,<span class="accent">八年十倍</span></div>
+      <div class="stage-sub">賣一份隔日到期的「保險」收權利金,大盤沒急跌就整筆落袋——8 年把 $<span id="st-from2"></span> 滾成 $<span id="st-to"></span>。</div>
+      <div class="stage-cta">
+        <a class="dlbtn" href="spx-1dte-naked-put-windows.zip" download><span class="ar">⬇</span> 下載程式</a>
+        <a class="refbtn" href="https://ibkr.com/referral/shanti102" target="_blank" rel="noopener">免費開 IBKR 帳戶 →</a>
+      </div>
+      <div class="stage-leg">
+        <span><i style="background:#d99a1e"></i>本策略(+SGOV 收息)</span>
+        <span><i style="background:#2f7fd6"></i>買進持有 QQQ</span>
+        <span><i style="background:#5a6b86"></i>買進持有 SPY</span>
+      </div>
+    </div>
+  </div>
+  <div class="scrollcue stage-reveal" id="st-cue">↓ 往下看它怎麼做到</div>
+</section>
 <div class="wrap">
   <div class="dlbar">
     <div class="dltxt"><b>免安裝・一鍵執行</b><span class="dlsub">Windows:解壓縮後雙擊 <code>run.bat</code> 就能跑,已內建 Node、不用安裝任何東西。</span></div>
@@ -310,6 +351,7 @@ const nf = n => Math.round(n).toLocaleString('en-US');
 const money = n => (n<0?'-$':'+$') + nf(Math.abs(n));
 const dpr = () => window.devicePixelRatio || 1;
 
+$('st-from').textContent=nf(D.startEquity); $('st-from2').textContent=nf(D.startEquity); $('st-to').textContent=nf(D.cashEnd); $('st-num').textContent=nf(D.startEquity);
 $('h-from').textContent=nf(D.startEquity); $('h-to').textContent=nf(D.cashEnd);
 $('h-ret').textContent='+'+D.cashReturnPct+'%'; $('s-cagr').textContent=D.cagr+'%'; $('s-win').textContent=D.winRate+'%';
 $('h-base').textContent=nf(D.endEquity); $('h-baseret').textContent='+'+D.totalReturnPct;
@@ -330,6 +372,45 @@ $('beat-start').textContent=nf(D.startEquity);
 $('beat-strat').textContent=nf(D.cashEnd); $('beat-strat2').textContent=nf(D.cashEnd); $('beat-strat-ret').textContent=D.cashReturnPct;
 $('beat-qqq').textContent=nf(D.qqqEnd); $('beat-qqq-ret').textContent=D.qqqReturnPct; $('beat-qqq-x').textContent=(D.cashEnd/D.qqqEnd).toFixed(1); $('beat-qqq-diff').textContent=nf(D.cashEnd-D.qqqEnd);
 $('beat-spy').textContent=nf(D.spyEnd); $('beat-spy-ret').textContent=D.spyReturnPct; $('beat-spy-x').textContent=(D.cashEnd/D.spyEnd).toFixed(1); $('beat-spy-diff').textContent=nf(D.cashEnd-D.spyEnd);
+
+// 第一屏:滿版動畫(三線描繪 + 數字跟著飆 + 標題淡入)
+(function(){const cv=$('herochart');if(!cv)return;const pts=D.curve;if(!pts||pts.length<2)return;
+  const cashv=pts.map(p=>p.cash),spyv=pts.map(p=>p.spy),qqqv=pts.map(p=>p.qqq),eqv=pts.map(p=>p.equity);
+  const lo=Math.min(...eqv,...spyv,...qqqv,...cashv),hi=Math.max(...cashv,...qqqv,...spyv);
+  let Wd=0,Hd=0;const ctx=cv.getContext('2d');
+  function rs(){const r=cv.parentElement.getBoundingClientRect();Wd=r.width;Hd=r.height;cv.width=Wd*dpr();cv.height=Hd*dpr();ctx.setTransform(dpr(),0,0,dpr(),0,0);}
+  const pT=()=>Hd*0.16,pB=()=>Hd*0.13,pL=0,pR=()=>Wd*0.04;
+  const X=i=>pL+(Wd-pL-pR())*(i/(pts.length-1)),Y=v=>pT()+(Hd-pT()-pB())*(1-(v-lo)/((hi-lo)||1));
+  function line(arr,cut,col,w,dash,glow){ctx.beginPath();for(let i=0;i<=cut&&i<arr.length;i++){const xx=X(i),yy=Y(arr[i]);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.strokeStyle=col;ctx.lineWidth=w;ctx.lineJoin='round';ctx.lineCap='round';if(dash)ctx.setLineDash(dash);if(glow){ctx.shadowColor=glow;ctx.shadowBlur=18;}ctx.stroke();ctx.setLineDash([]);ctx.shadowBlur=0;}
+  function draw(prog){ctx.clearRect(0,0,Wd,Hd);
+    ctx.strokeStyle='rgba(150,165,190,.22)';ctx.lineWidth=1;ctx.font='12px system-ui';ctx.fillStyle='#8595ad';ctx.textAlign='center';
+    let ly=null;pts.forEach((p,i)=>{const yr=p.date.slice(0,4);if(yr!==ly){ly=yr;const xx=X(i);if(xx<Wd*0.30)return;ctx.beginPath();ctx.moveTo(xx,pT());ctx.lineTo(xx,Hd-pB());ctx.stroke();ctx.fillText(yr,xx,Hd-pB()+18);}});
+    const cut=Math.floor((pts.length-1)*prog);
+    const g=ctx.createLinearGradient(0,pT(),0,Hd-pB());g.addColorStop(0,'rgba(200,144,26,.22)');g.addColorStop(1,'rgba(200,144,26,0)');
+    ctx.beginPath();ctx.moveTo(X(0),Hd-pB());for(let i=0;i<=cut&&i<pts.length;i++)ctx.lineTo(X(i),Y(cashv[i]));ctx.lineTo(X(Math.min(cut,pts.length-1)),Hd-pB());ctx.closePath();ctx.fillStyle=g;ctx.fill();
+    line(spyv,cut,'#5a6b86',2,[5,5],null);
+    line(qqqv,cut,'#2f7fd6',2.2,null,null);
+    line(cashv,cut,'#d99a1e',3.4,null,'rgba(200,144,26,.5)');
+    if(cut>0){const i=Math.min(cut,pts.length-1);ctx.beginPath();ctx.arc(X(i),Y(cashv[i]),6,0,7);ctx.fillStyle='#d99a1e';ctx.fill();ctx.beginPath();ctx.arc(X(i),Y(cashv[i]),12,0,7);ctx.strokeStyle='rgba(200,144,26,.35)';ctx.lineWidth=2;ctx.stroke();
+      $('st-num').textContent=nf(cashv[i]);}}
+  rs();draw(0);
+  let t0=null;const DUR=2600;
+  function anim(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/DUR);draw(1-Math.pow(1-p,3));if(p<1){requestAnimationFrame(anim);}else{$('st-num').textContent=nf(D.cashEnd);setTimeout(()=>{$('st-rest').classList.add('show');$('st-cue').classList.add('show');},180);}}
+  requestAnimationFrame(anim);
+  addEventListener('resize',()=>{rs();draw(1);$('st-num').textContent=nf(D.cashEnd);$('st-rest').classList.add('show');$('st-cue').classList.add('show');});})();
+
+// Apple 式數字:捲進畫面時從 0 跳升到終值
+(function(){if(!('IntersectionObserver'in window))return;
+  const ease=t=>1-Math.pow(1-t,3);
+  function run(el,to,dec,comma){let t0=null;const DUR=1100;
+    function step(ts){if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/DUR),v=to*ease(p);
+      el.textContent=comma?Math.round(v).toLocaleString('en-US'):v.toFixed(dec);
+      if(p<1)requestAnimationFrame(step);else el.textContent=comma?Math.round(to).toLocaleString('en-US'):to.toFixed(dec);}
+    requestAnimationFrame(step);}
+  const specs=[['s-cagr',D.cagr,1,false],['s-win',D.winRate,1,false],['beat-qqq-x',D.cashEnd/D.qqqEnd,1,false],['beat-spy-x',D.cashEnd/D.spyEnd,1,false],['beat-strat',D.cashEnd,0,true],['beat-strat2',D.cashEnd,0,true]];
+  const map=new Map(specs.map(s=>[s[0],s]));
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const s=map.get(e.target.id);if(s)run(e.target,s[1],s[2],s[3]);io.unobserve(e.target);}});},{threshold:.6});
+  specs.forEach(s=>{const el=$(s[0]);if(el)io.observe(el);});})();
 
 // 逐年
 (function(){const mx=Math.max(...D.byYear.map(y=>Math.abs(y.pnl)));
