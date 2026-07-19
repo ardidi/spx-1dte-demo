@@ -1,0 +1,15 @@
+{
+  "name": "spx-1dte-naked-put",
+  "version": "1.0.0",
+  "description": "SPX 1DTE 裸賣 put 機器人：賣一檔 7 delta 隔日到期 put，並預掛 GTC 自動停利",
+  "main": "spx-1dte-naked-put.js",
+  "scripts": {
+    "start": "node spx-1dte-naked-put.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@stoqey/ib": "^1.5.3"
+  }
+}

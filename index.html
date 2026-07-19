@@ -132,6 +132,9 @@ table.led tr.sel{background:rgba(245,196,81,.10)}
 .dlbtn:hover{transform:translateY(-2px)}
 .dlbtn .ar{font-size:19px}
 @media(max-width:560px){.dlbar{flex-direction:column;align-items:stretch;text-align:center}.dlbtn{justify-content:center}}
+.ghlink{display:inline-block;margin-top:12px;font-size:13.5px;font-weight:600;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.ghlink:hover{color:var(--ink)}
+.ghtext{color:var(--gold);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .beatbar{margin:6px 0 18px;padding:22px 24px;border:1px solid rgba(18,160,111,.30);border-radius:18px;background:linear-gradient(135deg,rgba(18,160,111,.14),rgba(47,127,214,.08) 55%,rgba(255,255,255,.9));position:relative;overflow:hidden}
 .beatbar h2{margin:0 0 16px;font-size:clamp(19px,3.3vw,27px);font-weight:800;line-height:1.4;color:var(--ink)}
 .beatbar h2 .up{color:var(--green);text-shadow:0 0 24px var(--glow);white-space:nowrap}
@@ -225,9 +228,10 @@ html{scroll-snap-type:y proximity}
       <div class="stage-title">每天收租,<span class="accent">八年十倍</span></div>
       <div class="stage-sub">賣一份隔日到期的「保險」收權利金,大盤沒急跌就整筆落袋——8 年把 $<span id="st-from2"></span> 滾成 $<span id="st-to"></span>。</div>
       <div class="stage-cta">
-        <a class="dlbtn" href="spx-1dte-naked-put-windows.zip" download><span class="ar">⬇</span> 下載程式</a>
+        <a class="dlbtn" href="spx-1dte-naked-put-windows.zip" download><span class="ar">⬇</span> 下載程式碼</a>
         <a class="refbtn" href="https://ibkr.com/referral/shanti102" target="_blank" rel="noopener">免費開 IBKR 帳戶 →</a>
       </div>
+      <a class="ghlink" href="https://github.com/ardidi/spx-1dte-demo" target="_blank" rel="noopener">或直接在 GitHub 上查看程式碼 →</a>
       <div class="stage-leg">
         <span><i style="background:#d99a1e"></i>本策略(+SGOV 收息)</span>
         <span><i style="background:#2f7fd6"></i>買進持有 QQQ</span>
@@ -290,8 +294,8 @@ html{scroll-snap-type:y proximity}
   </div></section>
 
   <div class="dlbar">
-    <div class="dltxt"><b>免安裝・一鍵執行</b><span class="dlsub">Windows:解壓縮後雙擊 <code>run.bat</code> 就能跑,已內建 Node、不用安裝任何東西。</span></div>
-    <a class="dlbtn" href="spx-1dte-naked-put-windows.zip" download><span class="ar">⬇</span> 下載程式(Windows・約 36 MB)</a>
+    <div class="dltxt"><b>免安裝・一鍵執行</b><span class="dlsub">Windows:解壓縮後雙擊 <code>run.bat</code> 就能跑,已內建 Node、不用安裝任何東西。<br>或直接<a class="ghtext" href="https://github.com/ardidi/spx-1dte-demo" target="_blank" rel="noopener">在 GitHub 上查看程式碼 →</a></span></div>
+    <a class="dlbtn" href="spx-1dte-naked-put-windows.zip" download><span class="ar">⬇</span> 下載程式碼(Windows・約 36 MB)</a>
   </div>
   <h1>它是怎麼<span class="accent">做到的</span>?</h1>
   <p class="sub">每天在美股大盤(標普 500)上賣一份「隔天到期」的保險,收一筆權利金。只要大盤隔天沒有急跌一大段,保險就作廢、權利金整筆進口袋。日積月累,就成了上面那條曲線。</p>
