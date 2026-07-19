@@ -63,7 +63,7 @@ ol.steps li b{color:var(--gold);font-weight:700}
 table.heat{width:100%;border-collapse:separate;border-spacing:3px;font-size:11.5px;font-variant-numeric:tabular-nums}
 table.heat th{color:var(--muted);font-weight:600;padding:2px;font-size:11px}
 table.heat td.hy{color:var(--muted);font-weight:700;text-align:left;padding-right:6px}
-table.heat td.hc{text-align:center;padding:7px 2px;border-radius:5px;color:#fff;min-width:34px}
+table.heat td.hc{text-align:center;padding:7px 2px;border-radius:5px;color:#243a56;font-weight:600;min-width:34px}
 table.heat td.hc.empty{background:#eef3fb!important;color:#b3bece}
 .tradehint{color:var(--muted);font-size:13px;margin:2px 0 14px}
 .ledgerwrap{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:14px}
@@ -627,8 +627,8 @@ function setupCanvas(cv,H){cv.width=cv.clientWidth*dpr();cv.height=H*dpr();const
   M.forEach(r=>r.months.forEach(v=>{if(v!=null)mx=Math.max(mx,Math.abs(v));}));if(mx===0)mx=1;
   const mn=['1','2','3','4','5','6','7','8','9','10','11','12'];
   const cell=v=>{if(v==null)return '<td class="hc empty">·</td>';
-    const a=Math.min(1,Math.abs(v)/mx),c=v>=0?'34,211,154':'255,93,108',lab=Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':''+Math.round(v);
-    return '<td class="hc" style="background:rgba('+c+','+(0.12+a*0.72).toFixed(2)+')" title="'+money(v)+'">'+lab+'</td>';};
+    const a=Math.min(1,Math.sqrt(Math.abs(v)/mx)),c=v>=0?'18,183,131':'255,77,94',lab=Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':''+Math.round(v);
+    return '<td class="hc" style="background:rgba('+c+','+(0.16+a*0.74).toFixed(2)+')" title="'+money(v)+'">'+lab+'</td>';};
   let html='<table class="heat"><thead><tr><th></th>'+mn.map(m=>'<th>'+m+'月</th>').join('')+'</tr></thead><tbody>';
   M.forEach(r=>{html+='<tr><td class="hy">'+r.year+'</td>'+r.months.map(cell).join('')+'</tr>';});
   $('heat').innerHTML=html+'</tbody></table>';})();
